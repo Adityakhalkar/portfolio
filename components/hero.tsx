@@ -1,92 +1,115 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useSound } from 'use-sound'
+import Image from 'next/image'
+import { Github, Linkedin, Twitter } from 'lucide-react'
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
+import { BackgroundBeams } from "@/components/ui/background-beams"
+import { Button } from "@/components/ui/moving-border"
 
-const fonts = [
-  'font-serif',
-  'font-mono',
-  'font-sans',
-  'font-cursive',
-  'font-fantasy',
-  'font-display',
-  'font-handwriting',
-  'font-orbitron'
-]
+const skills = ['Full Stack Developer', 'UI Designer', 'Data Engineer', 'ML Enthusiast']
 
 export default function Hero() {
-  const [currentFont, setCurrentFont] = useState(0)
-  const [showName, setShowName] = useState(true)
-  const [play] = useSound('/click.wav', { volume: 0.5 })
+  const [currentSkill, setCurrentSkill] = useState(0)
 
   useEffect(() => {
-    if (currentFont < fonts.length - 1) {
-      const timer = setTimeout(() => {
-        setShowName(false)
-        play()
-        setTimeout(() => {
-          setCurrentFont(prev => (prev + 1) % fonts.length)
-          setShowName(true)
-        }, 100)
-      }, 300) // Faster font change
-      return () => clearTimeout(timer)
-    }
-  }, [currentFont, play])
+    const interval = setInterval(() => {
+      setCurrentSkill((prev) => (prev + 1) % skills.length)
+    }, 5000) // Change skill every 5 seconds
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-800 to-pink-600 flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Floating particles in the background */}
-      <motion.div 
-        className="absolute top-0 left-0 w-full h-full opacity-20"
-        animate={{ x: [-100, 100], y: [-50, 50] }}
-        transition={{ repeat: Infinity, duration: 20, ease: "easeInOut" }}
-      >
-        {/* Adding minimalistic animation like floating petals */}
-        <div className="w-32 h-32 rounded-full bg-pink-300 opacity-50 blur-xl"></div>
-      </motion.div>
-
-      <div className="text-center mb-8 z-10">
-        <AnimatePresence mode="wait">
-          {showName && (
-            <motion.h1
-              key={currentFont}
-              className={`text-4xl sm:text-6xl md:text-7xl font-bold text-white ${fonts[currentFont]}`}
-              initial={{ opacity: 0, y: -20, rotate: 0 }}
-              animate={{ opacity: 1, y: 0, rotate: [0, 5, -5, 0] }} // Subtle rotation animation
-              exit={{ opacity: 0, y: 20, rotate: 0 }}
-              transition={{ duration: 0.2 }} // Faster transition for smoother effect
-            >
-              Aditya Khalkar
-            </motion.h1>
-          )}
-        </AnimatePresence>
-
-        <motion.p
-          className="text-xl sm:text-2xl text-white mt-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 0.5 }}
-        >
-          Full Stack Developer | Data Scientist | Machine Learning Enthusiast
-        </motion.p>
-      </div>
-
+    <div className="relative h-screen bg-white text-black flex flex-col items-center justify-center overflow-hidden">
+      <BackgroundBeams />
+      
       <motion.div
-        className="w-full max-w-md z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2.5, duration: 0.5 }}
+        transition={{ duration: 0.8 }}
+        className="z-10 text-center"
       >
-        <iframe
-          src="https://open.spotify.com/embed/playlist/37i9dQZF1DX5trt9i14X7j?utm_source=generator"
-          width="100%"
-          height="352"
-          frameBorder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-          title="Spotify playlist"
-        ></iframe>
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="relative mb-8"
+        >
+          <Image
+            src="/adityakhalkar.gif" 
+            alt="Aditya Khalkar"
+            width={600}
+            height={500}
+            className="rounded-lg"
+            unoptimized
+          />
+        </motion.div>
+
+        <div className="h-20 mb-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSkill}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <TextGenerateEffect words={skills[currentSkill]} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="z-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1 }}
+      >
+        <Button
+          borderRadius="1.75rem"
+          className="bg-white dark:bg-black text-black dark:text-white border-neutral-200 dark:border-slate-800"
+        >
+          Explore My Work
+        </Button>
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-8 left-8 z-10 flex space-x-6"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 1.2 }}
+      >
+        {[
+          { name: 'GitHub', icon: Github, url: '#' },
+          { name: 'LinkedIn', icon: Linkedin, url: '#' },
+          { name: 'Twitter', icon: Twitter, url: '#' }
+        ].map((platform) => (
+          <motion.a
+            key={platform.name}
+            href={platform.url}
+            whileHover={{ y: -3, color: "#3B82F6" }}
+            className="text-gray-600 hover:text-blue-500 transition-colors duration-300"
+          >
+            <platform.icon size={24} />
+          </motion.a>
+        ))}
+      </motion.div>
+
+      <motion.div
+        className="absolute top-8 right-8 z-10"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 1.4 }}
+      >
+        <Button
+          borderRadius="1.75rem"
+          className="bg-white dark:bg-black text-black dark:text-white border-neutral-200 dark:border-slate-800"
+        >
+          Contact Me
+        </Button>
       </motion.div>
     </div>
   )

@@ -28,7 +28,8 @@ const config: Config = {
   			audiowide: ['Audiowide', 'cursive'],
   			bungee: ['Bungee', 'cursive'],
   			caveat: ['Caveat', 'cursive'],
-  			cinzel: ['Cinzel', 'serif']
+  			cinzel: ['Cinzel', 'serif'],
+			impact: ['Impact', 'sans-serif'],
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

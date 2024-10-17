@@ -3,8 +3,6 @@ import { useEffect } from "react";
 import type { Metadata } from "next";
 import Lenis from "@studio-freight/lenis";
 import "./globals.css";
-import Link from "next/link";
-
 
 export default function RootLayout({
   children,
@@ -26,15 +24,22 @@ export default function RootLayout({
 
     requestAnimationFrame(raf);
   }, []);
+  
   return (
     <html lang="en">
       <head>
         <title>Aditya Khalkar</title>
-        <Link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400..900&family=Poppins:wght@400..900&family=Nunito:wght@400..900&family=Montserrat:wght@400..900&family=Georgia:wght@400..900&family=Anton:wght@400..900&family=Open+Sans:wght@400..900&family=Press+Start+2P&family=Orbitron:wght@400..900&family=Bebas+Neue:wght@400..900&family=Pacifico&family=Audiowide&family=Bungee&family=Caveat:wght@400..700&family=Cinzel:wght@400..900&display=swap" rel="stylesheet" />
+        {/* Use a standard link tag for stylesheets */}
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@400..900&family=Poppins:wght@400..900&family=Nunito:wght@400..900&family=Montserrat:wght@400..900&family=Georgia:wght@400..900&family=Anton:wght@400..900&family=Open+Sans:wght@400..900&family=Press+Start+2P&family=Orbitron:wght@400..900&family=Bebas+Neue:wght@400..900&family=Pacifico&family=Audiowide&family=Bungee&family=Caveat:wght@400..700&family=Cinzel:wght@400..900&display=swap" 
+          rel="stylesheet" 
+        />
+        <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet"></link>
       </head>
       <body>
-    {children}
-    </body>
+        
+        {children}
+      </body>
     </html>
   );
 }
