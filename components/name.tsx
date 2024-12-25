@@ -1,39 +1,36 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import PixelText from "../components/myTitle";
 
 const Name: React.FC = () => {
   const [frame, setFrame] = useState(0);
   const totalFrames = 21; // Total frames in the GIF
   const duration = 1.5; // GIF duration in seconds
   const frameInterval = (duration / totalFrames) * 1000; // Time per frame in ms
-  const [cycleCount, setCycleCount] = useState(0);
   const [gifKey, setGifKey] = useState(0);
 
   useEffect(() => {
+    let cycleCount = 0;
+  
     const interval = setInterval(() => {
       setFrame((prev) => {
         // When frame reaches the end of a cycle
         if (prev + 1 >= totalFrames) {
-          setCycleCount((currentCycle) => {
-            // Increment cycle count
-            const newCycleCount = currentCycle + 1;
-            
-            // Reset GIF after 5 cycles
-            if (newCycleCount >= 5) {
-              setGifKey(prev => prev + 1);
-              return 0; // Reset cycle count
-            }
-            
-            return newCycleCount;
-          });
+          cycleCount += 1;
+  
+          // Reset GIF after 5 cycles
+          if (cycleCount >= 5) {
+            setGifKey((prev) => prev + 1);
+            cycleCount = 0; // Reset cycle count
+          }
         }
         return (prev + 1) % totalFrames;
       });
     }, frameInterval);
+  
     return () => clearInterval(interval);
   }, [frameInterval, totalFrames]);
+  
 
   return (
     <div className="relative inline-block font-['Press_Start_2P'] text-black dark:text-white text-4xl text-center">

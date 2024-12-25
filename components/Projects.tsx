@@ -41,10 +41,6 @@ const ProjectsDiv: React.FC = () => {
     };
     requestAnimationFrame(raf);
   
-    // Calculate stage-relative progress
-    const getRelativeProgress = (progress: number, stageStart: number, stageEnd: number) => {
-      return (progress - stageStart) / (stageEnd - stageStart);
-    };
   
     lenis.on("scroll", ({ progress }: { progress: number }) => {
       setScrollProgress(progress);
@@ -150,11 +146,6 @@ const ProjectsDiv: React.FC = () => {
     };
   };
   
-
-  // Easing function for smoother transitions
-  const easeInOutCubic = (t: number): number => {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  };
 
   return (
     <div ref={containerRef} className="relative w-full min-h-[300vh] bg-white dark:bg-black">

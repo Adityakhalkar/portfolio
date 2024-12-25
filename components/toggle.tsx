@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTheme } from "next-themes";
 import { motion } from 'framer-motion'
-import { th } from 'framer-motion/client';
 
 const LightbulbAnimation = () => {
   const [isOn, setIsOn] = useState(true)
@@ -18,7 +17,7 @@ const LightbulbAnimation = () => {
     else {
       setIsOn(false)
     }
-  }, []);
+  }, [theme]);
 
   if (!mounted) return null;
   const toggleTheme = () => {

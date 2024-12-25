@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 interface ScrollDownProps {
