@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import CursorMask from "../components/CursorMask";
+import { ThemeProvider } from "next-themes";
+import React from "react";
+import ProjectsDiv from "@/components/Projects";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,11 +28,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        {/* Wrapping in ThemeProvider */}
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={true}>
+          <CursorMask />
+          {children}
+          <ProjectsDiv />
+          <div className="h-screen bg-gray-50"></div>
+        </ThemeProvider>
       </body>
     </html>
   );
