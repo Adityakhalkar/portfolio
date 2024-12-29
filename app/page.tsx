@@ -3,7 +3,6 @@ import Name from "../components/name";
 import PixelMaskTransition from "../components/myTitle";
 import PixelToggle from "../components/toggle";
 import ScrollDown from "../components/ScrollDown";
-import ProjectsDiv from "../components/Projects";
 export default function Home() {
   const texts = [
     "Full Stack Developer",

@@ -75,3 +75,109 @@ body {
     linear-gradient(180deg, var(--mesh-line-color) 1px, transparent 1px);
   background-size: 30px 30px; /* Adjust spacing */
 }
+@keyframes plusExpandVertical {
+  0% {
+    clip-path: polygon(48% 48%, 52% 48%, 52% 52%, 48% 52%);
+  }
+  50% {
+    clip-path: polygon(48% 0%, 52% 0%, 52% 100%, 48% 100%);
+  }
+  100% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}
+
+.mask-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: black;
+  pointer-events: none;
+  animation: maskFade 2.5s ease-out forwards;
+}
+
+.mask-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: white;
+  animation: plusExpandVertical 2s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+}
+
+:root[class~="dark"] .mask-overlay {
+  background-color: white;
+}
+
+:root[class~="dark"] .mask-overlay::before {
+  background-color: black;
+}
+
+@keyframes maskFade {
+  0%, 90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes typeWriter {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.typing-mask {
+  display: inline-block;
+  opacity: 0;
+  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+             fadeIn 0.1s linear 2.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.typing-delay-1 {
+  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 2.7s forwards,
+             fadeIn 0.1s linear 2.7s forwards;
+}
+
+.typing-delay-2 {
+  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 2.9s forwards,
+             fadeIn 0.1s linear 2.9s forwards;
+}
+
+.typing-delay-3 {
+  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 3.1s forwards,
+             fadeIn 0.1s linear 3.1s forwards;
+}
+
+.typing-delay-4 {
+  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 3.3s forwards,
+             fadeIn 0.1s linear 3.3s forwards;
+}
+
+.typing-delay-5 {
+  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 3.5s forwards,
+             fadeIn 0.1s linear 3.5s forwards;
+}
+
+/* Optional blinking cursor that appears after initial mask animation */
+.cursor-blink::after {
+  content: '|';
+  margin-left: 2px;
+  opacity: 0;
+  animation: blink 1s step-end 2.5s infinite;
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}

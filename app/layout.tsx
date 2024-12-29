@@ -39,6 +39,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* Wrapping in ThemeProvider */}
+        <div className="mask-overlay" />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={true}>
           <CursorMask />
           {children}
