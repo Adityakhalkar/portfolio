@@ -5,6 +5,7 @@ import CursorMask from "../components/CursorMask";
 import { ThemeProvider } from "next-themes";
 import React from "react";
 import ProjectsDiv from "@/components/Projects";
+import Head from "next/head";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

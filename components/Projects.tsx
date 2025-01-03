@@ -1,17 +1,57 @@
 "use client"
 import React, { useEffect, useState, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const ProjectsDiv: React.FC = () => {
   const [filledBoxes, setFilledBoxes] = useState<number[]>([]);
   const [gridSize, setGridSize] = useState({ cols: 0, rows: 0, totalBoxes: 0 });
-  const [formed, setFormed] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const FIXED_NUMBER_OF_BOXES = 48;
   const BOX_SIZE = 50;
+  const projectRanges = {
+    project1: { start: 0.25, end: 0.35 },
+    project2: { start: 0.45, end: 0.55 },
+    project3: { start: 0.65, end: 0.75 }
+  };
+  const projects = [
+    {
+      title: "Dataset Finder",
+      image: "/dataset-finder.png",
+      link: "https://huggingface.co/spaces/AdityaKhalkar/Dataset-finder",
+      top: 200,
+      left: 100,
+      range: projectRanges.project1,
+      height: "400px"
+    },
+    {
+      title: "Seat Algo",
+      image: "/SeatAlgo.jpg",
+      link: "https://seatalgo.streamlit.app",
+      top: 200,
+      left: 550,
+      range: projectRanges.project2,
+      height: "100px"
+    },
+    {
+      title: "Eye from above",
+      image: "/eye-from-above.png",
+      link: "https://eye-from-above.vercel.app",
+      top: 200,
+      left: 1075,
+      range: projectRanges.project3,
+      height: "350px"
+    },
+  ];
+  const getCurrentProject = () => {
+    return projects.find(project => 
+      scrollProgress >= project.range.start && 
+      scrollProgress <= project.range.end
+    );
+  };
+
 
   const debounce = (func: Function, wait: number) => {
     let timeout: NodeJS.Timeout;
@@ -44,14 +84,6 @@ const ProjectsDiv: React.FC = () => {
   
     lenis.on("scroll", ({ progress }: { progress: number }) => {
       setScrollProgress(progress);
-  
-      const nextStageIndex = STAGES.findIndex(
-        (stage, i) => progress >= stage && progress < (STAGES[i + 1] || 1)
-      );
-  
-      if (nextStageIndex !== -1) {
-        currentStageIndex = nextStageIndex;
-      }
     });
   
     const calculateGridSize = () => {
@@ -70,7 +102,7 @@ const ProjectsDiv: React.FC = () => {
       lenis.destroy();
     };
   }, []);
-  
+
   useEffect(() => {
     if (gridSize.totalBoxes > 0) {
       const boxes: number[] = [];
@@ -119,18 +151,15 @@ const ProjectsDiv: React.FC = () => {
         targetX = 0;
         targetY = 0;
       } else if (state === 'left') {
-        //add class left-position to the box
         targetX = leftPosition + rectCol * BOX_SIZE - col * BOX_SIZE;
         targetY = startY + rectRow * BOX_SIZE - row * BOX_SIZE;
         className = 'left-position';
       } else if (state === 'middle') {
-        //add class middle-position to the box
         targetX = middlePosition + rectCol * BOX_SIZE - col * BOX_SIZE;
         targetY = startY + rectRow * BOX_SIZE - row * BOX_SIZE;
         className = 'middle-position';
       } else if (state === 'right') {
-        //add class right-position to the box
-        targetX = rightPosition + rectCol * BOX_SIZE - col * BOX_SIZE;
+        targetX = rightPosition + rectCol * BOX_SIZE - col * BOX_SIZE-20;
         targetY = startY + rectRow * BOX_SIZE - row * BOX_SIZE;
         className = 'right-position';
       }
@@ -146,6 +175,25 @@ const ProjectsDiv: React.FC = () => {
       transform: `translate(0px, 0px)`,
       transition: 'transform 0.8s ease-out',
     };
+  };
+  const openLink = () => {
+    window.open(getCurrentProject()?.link, "_blank");
+  }
+
+  // Get project position based on current state
+  const getProjectPosition = () => {
+    const leftPosition = BOX_SIZE * 2;
+    const middlePosition = 550;
+    const rightPosition = 1050;
+  
+    if (scrollProgress >= projectRanges.project1.start && scrollProgress <= projectRanges.project1.end) {
+      return leftPosition;
+    } else if (scrollProgress >= projectRanges.project2.start && scrollProgress <= projectRanges.project2.end) {
+      return middlePosition;
+    } else if (scrollProgress >= projectRanges.project3.start && scrollProgress <= projectRanges.project3.end) {
+      return rightPosition;
+    }
+    return undefined; 
   };
 
   return (
@@ -174,31 +222,62 @@ const ProjectsDiv: React.FC = () => {
               ...getBoxTransform(boxIndex)
             }}
           />
-        ))} 
-        {scrollProgress >= 0.25 && (
+        ))}
+        {getProjectPosition() !== undefined && (
           <motion.div
-            className="absolute font-['Press_Start_2P'] top-56 left-36 text-white dark:text-black pointer-events-none"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: scrollProgress >= 0.25 && scrollProgress <= 0.35 ? 1 : 0,
-              y: scrollProgress >= 0.25 && scrollProgress <= 0.35 ? 0 : 20,
-              scale: scrollProgress >= 0.25 && scrollProgress <= 0.35 ? 1 : 0.8,
+            className="absolute z-10 pointer-events-auto"
+            style={{
+              width: "300px",
+              height: "400px",
+              top: "200px",
+              transform: `translateX(${getProjectPosition()}px)`,
             }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            initial={{ opacity: 0}}
+            animate={{ opacity: 1}}
+            transition={{ duration: 0.8 }}
+            exit={{ opacity: 0}}
           >
-            <motion.span
-              initial={{ display: "inline-block" }}
-              animate={{
-                y: scrollProgress >= 0.25 && scrollProgress <= 0.35
-                  ? 0
-                  : [0, -10, 0],
-              }}
-              transition={{ duration: 0.5, ease: "easeOut", repeat: Infinity, repeatDelay: 1 }}
-            >
-              Dataset Finder
-            </motion.span>
+            <AnimatePresence mode="wait">
+  {getCurrentProject() && (
+    <>
+      <motion.p
+        key={getCurrentProject()?.title}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, x: -30 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="font-['Press_Start_2P'] text-white dark:text-black mb-4 text-center pt-6"
+      >
+        {getCurrentProject()?.title}
+      </motion.p>
+      <motion.img
+        key={getCurrentProject()?.image}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        src={getCurrentProject()?.image}
+        alt={getCurrentProject()?.title}
+        className="w-full max-w-[250px] h-auto object-cover mx-auto mb-4"
+      />
+      <motion.button
+        key={getCurrentProject()?.link}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 30 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        onClick={openLink}
+        className="font-['Press_Start_2P'] text-white w-full text-center py-2 px-4 mt-2 rounded-full dark:text-black hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-300"
+      >
+        View Project
+      </motion.button>
+    </>
+  )}
+</AnimatePresence>
+
           </motion.div>
         )}
+
         <div className="relative z-2 flex flex-col items-center justify-start h-full text-xl text-black dark:text-white font-['Press_Start_2P']">
           <h1 className="mt-16">Projects</h1>
         </div>
