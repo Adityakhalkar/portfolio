@@ -1,20 +1,21 @@
 "use client"
 import React, { useEffect, useState, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import ScrollDown from "./ScrollDown";
 
 const ProjectsDiv: React.FC = () => {
   const [filledBoxes, setFilledBoxes] = useState<number[]>([]);
   const [gridSize, setGridSize] = useState({ cols: 0, rows: 0, totalBoxes: 0 });
   const [scrollProgress, setScrollProgress] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null!);
 
   const FIXED_NUMBER_OF_BOXES = 48;
   const BOX_SIZE = 50;
   const projectRanges = {
-    project1: { start: 0.25, end: 0.35 },
-    project2: { start: 0.45, end: 0.55 },
-    project3: { start: 0.65, end: 0.75 }
+    project1: { start: 0.62, end: 0.68 },
+    project2: { start: 0.72, end: 0.78 },
+    project3: { start: 0.82, end: 0.88 }
   };
   const projects = [
     {
@@ -62,8 +63,6 @@ const ProjectsDiv: React.FC = () => {
   };
 
   useEffect(() => {
-    const STAGES = [0, 0.3, 0.5, 0.8, 1];
-    let currentStageIndex = 0;
   
     const lenis = new Lenis({
       duration: 1.5,
@@ -130,11 +129,11 @@ const ProjectsDiv: React.FC = () => {
     const startY = Math.floor((window.innerHeight - rectHeight * BOX_SIZE) / 2 / BOX_SIZE) * BOX_SIZE;
   
     let state: 'random' | 'left' | 'middle' | 'right' = 'random';
-    if (scrollProgress >= 0.2 && scrollProgress < 0.4) {
+    if (scrollProgress >= 0.6 && scrollProgress < 0.7) {
       state = 'left';
-    } else if (scrollProgress >= 0.4 && scrollProgress < 0.6) {
+    } else if (scrollProgress >= 0.7 && scrollProgress < 0.8) {
       state = 'middle';
-    } else if (scrollProgress >= 0.6 && scrollProgress < 0.8) {
+    } else if (scrollProgress >= 0.8 && scrollProgress < 0.9) {
       state = 'right';
     }
   
@@ -280,6 +279,7 @@ const ProjectsDiv: React.FC = () => {
 
         <div className="relative z-2 flex flex-col items-center justify-start h-full text-xl text-black dark:text-white font-['Press_Start_2P']">
           <h1 className="mt-16">Projects</h1>
+          <ScrollDown targetId={""} />
         </div>
       </div>
     </div>
