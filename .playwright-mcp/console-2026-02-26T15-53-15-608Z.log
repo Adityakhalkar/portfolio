@@ -1,0 +1,19 @@
+[   13547ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/templates/music-prod:0
+[   14671ms] [ERROR] Warning: Extra attributes from the server: %s%s class,style 
+    at html
+    at RootLayout (Server)
+    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)
+    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)
+    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)
+    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)
+    at DevRootNotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/dev-root-not-found-boundary.js:33:11)
+    at ReactDevOverlay (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)
+    at HotReload (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:321:11)
+    at Router (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:207:11)
+    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)
+    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)
+    at AppRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:585:13)
+    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)
+    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11) @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32
+[   14762ms] [WARNING] AdSense head tag doesn't support data-nscript attribute. @ https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4805391659216369:225
+[   15678ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-4805391659216369&output=html&adk=1812271804&adf=3025194257&lmt=1772121210&plat=3%3A16%2C4%3A16%2C9%3A32776%2C16%3A8388608%2C17%3A32%2C24%3A32%2C25%3A32%2C30%3A1048576%2C32%3A32%2C41%3A32%2C42%3A32%2C43%3A32&format=0x0&url=http%3A%2F%2Flocalhost%3A3000%2Ftemplates%2Fmusic-prod&pra=5&asro=0&aiapm=0.1542&aiapmd=0.1423&aiapmi=0.16&aiapmid=1&aiact=0.5423&aiactd=0.7&aicct=0.7&aicctd=0.5799&ailct=0.5849&ailctd=0.65&aimart=4&aimartd=4&aieuf=1&aicrs=1&uach=WyJtYWNPUyIsIjI2LjAuMSIsImFybSIsIiIsIjE0NS4wLjc2MzIuMTE3IixudWxsLDAsbnVsbCwiNjQiLFtbIk5vdDpBLUJyYW5kIiwiOTkuMC4wLjAiXSxbIkdvb2dsZSBDaHJvbWUiLCIxNDUuMC43NjMyLjExNyJdLFsiQ2hyb21pdW0iLCIxNDUuMC43NjMyLjExNyJdXSwwXQ..&abgtt=6&dt=1772121210371&bpp=3&bdt=1226&idt=274&shv=r20260224&mjsv=m202602190101&ptt=9&saldr=aa&abxe=1&cookie_enabled=1&eoidce=1&nras=1&correlator=4845446871840&frm=20&pv=2&u_tz=330&u_his=2&u_h=956&u_w=1470&u_ah=845&u_aw=1470&u_cd=30&u_sd=2&dmc=8&adx=-12245933&ady=-12245933&biw=1185&bih=714&scr_x=0&scr_y=0&eid=95378429%2C95381339%2C95382853%2C95383859%2C42533293%2C95383665&oid=2&pvsid=8889020272828909&tmod=348286349&uas=3&nvt=1&fsapi=1&fc=1920&brdim=22%2C56%2C22%2C56%2C1470%2C34%2C1200%2C801%2C1200%2C714&vis=1&rsz=%7C%7Cs%7C&abl=NS&fu=32768&bc=31&bz=1&pgls=CAk.&ifi=1&uci=a!1&fsb=1&dtd=299:0
