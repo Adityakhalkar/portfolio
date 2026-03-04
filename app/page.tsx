@@ -1,27 +1,34 @@
-import React from "react";
-import Name from "../components/name";
-import PixelMaskTransition from "../components/myTitle";
-import PixelToggle from "../components/toggle";
-import ScrollDown from "../components/ScrollDown";
-import ProjectsDiv from "@/components/Projects";
-import ExperienceDiv from "@/components/Experience";
+"use client";
+
+import React, { useState, useCallback } from "react";
+import Loader from "@/components/Loader";
+import Navigation from "@/components/Navigation";
+import Hero from "@/components/Hero";
+import MyWork from "@/components/MyWork";
+import About from "@/components/About";
+import Skills from "@/components/Skills";
+
 export default function Home() {
-  const texts = [
-    "Full Stack Developer",
-    "Data Science Enthusiast",
-    "UI/UX Designer",
-  ]
+  const [loaded, setLoaded] = useState(false);
+
+  const handleLoaderComplete = useCallback(() => {
+    setLoaded(true);
+  }, []);
+
   return (
     <>
-    <div className="flex flex-col items-center font-['Press_Start_2P'] justify-center min-h-screen py-2 bg-white dark:bg-black">
-      <PixelToggle />
-      <Name />
-      <PixelMaskTransition texts={texts} className="mt-8" />
-    </div>
-    <ExperienceDiv />
-    <ProjectsDiv />
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-white dark:bg-black">
-      </div>
+      {!loaded && <Loader onComplete={handleLoaderComplete} />}
+      <main className="flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden">
+        <Navigation />
+        <Hero startAnimation={loaded} />
+        <MyWork />
+        <About />
+        <Skills />
+
+        <footer className="py-12 text-center text-secondary font-['Inter'] text-sm">
+          <p>&copy; {new Date().getFullYear()} Aditya Khalkar. All rights reserved.</p>
+        </footer>
+      </main>
     </>
   );
 }

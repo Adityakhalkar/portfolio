@@ -2,182 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'GeistPixel';
+  src: url('/fonts/GeistPixel-Circle.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-pixel: 'GeistPixel', 'Courier New', monospace;
+  --foreground-rgb: 234, 234, 234;
+  --background-start-rgb: 5, 5, 5;
+  --background-end-rgb: 5, 5, 5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-void text-concrete;
+    /* This ensures horizontal scrollbars don't appear during animations */
+    overflow-x: hidden; 
+  }
+  
+  /* Smooth scrolling for the whole HTML document */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.5s ease, color 0.5s ease;
-}
-* {
-  cursor: none;
+/* Custom Scrollbar for that "technical" feel */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-body {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ctext x='50%' y='50%' text-anchor='middle' dy='.3em' font-family='Press Start 2P' font-size='48' fill='black'%3E+%3C/text%3E%3C/svg%3E") 30 30, auto;
-}
-@keyframes pixelTransform {
-  0% {
-    text-shadow: 2px 2px 0 #ff0000, -2px -2px 0 #00ff00;
-    opacity: 1;
-  }
-  50% {
-    text-shadow: -4px -4px 0 #ff00ff, 4px 4px 0 #00ffff;
-    opacity: 0.5;
-  }
-  100% {
-    text-shadow: 0px 0px 0 #000, 0px 0px 0 #000;
-    opacity: 1;
-  }
+::-webkit-scrollbar-track {
+  background: #050505; 
 }
 
-.pixel-transform {
-  animation: pixelTransform 0.6s ease;
-}
-:root {
-  --mesh-line-color: #000 dark:#fff; /* Black lines for light mode */
-  --mesh-background-color: #fff dark:#121212; /* White background for light mode */
+::-webkit-scrollbar-thumb {
+  background: #333333; 
+  border-radius: 0px;
 }
 
-.mesh-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background-color: var(--mesh-background-color);
+::-webkit-scrollbar-thumb:hover {
+  background: #00FFC2; 
 }
 
-.mesh-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  grid-template-rows: repeat(20, 1fr);
-  gap: 20px;
-  pointer-events: none;
-  background: transparent;
-  background-image:
-    linear-gradient(90deg, var(--mesh-line-color) 1px, transparent 1px),
-    linear-gradient(180deg, var(--mesh-line-color) 1px, transparent 1px);
-  background-size: 30px 30px; /* Adjust spacing */
-}
-@keyframes plusExpandVertical {
-  0% {
-    clip-path: polygon(48% 48%, 52% 48%, 52% 52%, 48% 52%);
-  }
-  50% {
-    clip-path: polygon(48% 0%, 52% 0%, 52% 100%, 48% 100%);
-  }
-  100% {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  }
+/* Utility class for the noise overlay 
+  You will need a noise.png image in your public folder 
+  or you can use a CSS generator. Here is a CSS-only version:
+*/
+.bg-noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-.mask-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background-color: black;
-  pointer-events: none;
-  animation: maskFade 2.5s ease-out forwards;
+/* Glitch-in animation for hero text */
+@keyframes glitchIn {
+  0%, 5%   { opacity: 0; transform: translate(0); }
+  6%, 8%   { opacity: 1; transform: translate(-3px, 1px) skewX(2deg); }
+  9%, 12%  { opacity: 0; }
+  13%, 16% { opacity: 1; transform: translate(2px, -1px); clip-path: inset(30% 0 50% 0); }
+  17%, 20% { opacity: 0; transform: translate(-1px, 2px); }
+  21%, 26% { opacity: 1; transform: translate(3px, 0); clip-path: inset(60% 0 10% 0); }
+  27%, 30% { opacity: 0; }
+  31%, 36% { opacity: 1; transform: translate(-2px, -1px); clip-path: none; }
+  37%, 40% { opacity: 0; }
+  41%, 48% { opacity: 1; transform: translate(1px, 1px) skewX(-1deg); clip-path: inset(10% 0 70% 0); }
+  49%, 55% { opacity: 1; transform: translate(0); clip-path: none; }
+  56%, 58% { opacity: 0; }
+  59%, 65% { opacity: 1; transform: translate(-1px, 0); }
+  66%, 68% { opacity: 0; }
+  69%, 100% { opacity: 1; transform: translate(0); clip-path: none; }
 }
 
-.mask-overlay::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-color: white;
-  animation: plusExpandVertical 2s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+.glitch-in {
+  animation: glitchIn 1s linear forwards;
 }
 
-:root[class~="dark"] .mask-overlay {
-  background-color: white;
+/* Nav glitch on hover */
+@keyframes navGlitch {
+  0%   { transform: translate(0); opacity: 1; }
+  15%  { transform: translate(-2px, 1px) skewX(3deg); opacity: 0.8; }
+  30%  { transform: translate(1px, -1px) skewX(-2deg); opacity: 1; }
+  45%  { transform: translate(-1px, 0); clip-path: inset(20% 0 60% 0); }
+  60%  { transform: translate(2px, 1px); clip-path: none; opacity: 0.7; }
+  75%  { transform: translate(0, -1px) skewX(1deg); opacity: 1; }
+  100% { transform: translate(0); opacity: 1; clip-path: none; }
 }
 
-:root[class~="dark"] .mask-overlay::before {
-  background-color: black;
-}
-
-@keyframes maskFade {
-  0%, 90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-@keyframes typeWriter {
-  0% {
-    clip-path: inset(0 100% 0 0);
-  }
-  100% {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-.typing-mask {
-  display: inline-block;
-  opacity: 0;
-  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards,
-             fadeIn 0.1s linear 2.5s forwards;
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-.typing-delay-1 {
-  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 2.7s forwards,
-             fadeIn 0.1s linear 2.7s forwards;
-}
-
-.typing-delay-2 {
-  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 2.9s forwards,
-             fadeIn 0.1s linear 2.9s forwards;
-}
-
-.typing-delay-3 {
-  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 3.1s forwards,
-             fadeIn 0.1s linear 3.1s forwards;
-}
-
-.typing-delay-4 {
-  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 3.3s forwards,
-             fadeIn 0.1s linear 3.3s forwards;
-}
-
-.typing-delay-5 {
-  animation: typeWriter 0.5s cubic-bezier(0.4, 0, 0.2, 1) 3.5s forwards,
-             fadeIn 0.1s linear 3.5s forwards;
-}
-
-/* Optional blinking cursor that appears after initial mask animation */
-.cursor-blink::after {
-  content: '|';
-  margin-left: 2px;
-  opacity: 0;
-  animation: blink 1s step-end 2.5s infinite;
-}
-
-@keyframes blink {
-  from, to { opacity: 1; }
-  50% { opacity: 0; }
+.nav-glitch {
+  animation: navGlitch 0.2s linear;
 }

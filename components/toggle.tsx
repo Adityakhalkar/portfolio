@@ -1,15 +1,19 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { motion } from 'framer-motion'
 
 const LightbulbAnimation = () => {
+  const pathname = usePathname();
+  const isTemplate = pathname?.startsWith("/templates/") ?? false;
   const [isOn, setIsOn] = useState(true)
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    if (isTemplate) return;
     setMounted(true);
     if (theme === "light") {
       setIsOn(true)
@@ -17,9 +21,11 @@ const LightbulbAnimation = () => {
     else {
       setIsOn(false)
     }
-  }, [theme]);
+  }, [theme, isTemplate]);
 
+  if (isTemplate) return null;
   if (!mounted) return null;
+
   const toggleTheme = () => {
     setIsOn(!isOn);
     setTheme(theme === "light" ? "dark" : "light");
@@ -74,4 +80,3 @@ const LightbulbAnimation = () => {
 }
 
 export default LightbulbAnimation
-

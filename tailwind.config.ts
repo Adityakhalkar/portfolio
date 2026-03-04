@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        void: "#050505",
+        concrete: "#eaeaea",
+        secondary: "#888888",
+        accent: "#00FFC2",
       },
       keyframes: {
         lower: {
