@@ -9,9 +9,14 @@ export default function CustomCursor() {
     const cursorRef = useRef<HTMLDivElement>(null);
     const followerRef = useRef<HTMLDivElement>(null);
     const [isHovering, setIsHovering] = useState(false);
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     useEffect(() => {
-        if (isTemplate) return;
+        setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window);
+    }, []);
+
+    useEffect(() => {
+        if (isTemplate || isTouchDevice) return;
         const cursor = cursorRef.current;
         const follower = followerRef.current;
 
@@ -59,10 +64,10 @@ export default function CustomCursor() {
             document.removeEventListener("mouseover", handleMouseOver);
             document.removeEventListener("mouseout", handleMouseOut);
         };
-    }, [isTemplate]);
+    }, [isTemplate, isTouchDevice]);
 
     useEffect(() => {
-        if (isTemplate) return;
+        if (isTemplate || isTouchDevice) return;
         const cursor = cursorRef.current;
         const follower = followerRef.current;
 
@@ -87,9 +92,9 @@ export default function CustomCursor() {
                 duration: 0.3
             });
         }
-    }, [isHovering, isTemplate]);
+    }, [isHovering, isTemplate, isTouchDevice]);
 
-    if (isTemplate) return null;
+    if (isTemplate || isTouchDevice) return null;
 
     return (
         <>

@@ -5,11 +5,14 @@ import { useTheme } from "next-themes";
 import gsap from "gsap";
 
 // ──────────────────────────────────────────────
-// TUNE THESE to adjust initial hand positions:
-const HUMAN_START_X = "24vw";
-const HUMAN_START_Y = "22vh";
-const ROBOT_START_X = "-20vw";
-const ROBOT_START_Y = "-18vh";
+// Hand start positions -- tighter on mobile so they don't fly off-screen
+function getStartPositions() {
+  if (typeof window === "undefined") return { hx: "24vw", hy: "22vh", rx: "-20vw", ry: "-18vh" };
+  const mobile = window.innerWidth < 768;
+  return mobile
+    ? { hx: "14vw", hy: "14vh", rx: "-12vw", ry: "-12vh" }
+    : { hx: "24vw", hy: "22vh", rx: "-20vw", ry: "-18vh" };
+}
 // ──────────────────────────────────────────────
 
 interface HeroProps {
@@ -145,10 +148,11 @@ export default function Hero({ startAnimation = false }: HeroProps) {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set(humanRef.current, { x: HUMAN_START_X, y: HUMAN_START_Y });
-      gsap.set(robotRef.current, { x: ROBOT_START_X, y: ROBOT_START_Y });
-      gsap.set(leftPanelRef.current, { x: HUMAN_START_X });
-      gsap.set(rightPanelRef.current, { x: ROBOT_START_X });
+      const { hx, hy, rx, ry } = getStartPositions();
+      gsap.set(humanRef.current, { x: hx, y: hy });
+      gsap.set(robotRef.current, { x: rx, y: ry });
+      gsap.set(leftPanelRef.current, { x: hx });
+      gsap.set(rightPanelRef.current, { x: rx });
       gsap.set(nameRef.current, { opacity: 0 });
 
       const tl = gsap.timeline({ paused: true, delay: 0.3 });
@@ -203,28 +207,28 @@ export default function Hero({ startAnimation = false }: HeroProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen bg-white dark:bg-void overflow-hidden"
+      className="relative w-full h-[70vh] md:h-screen bg-white dark:bg-void overflow-hidden"
     >
       {/* Initial black overlay */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-black z-30 pointer-events-none"
+        className="absolute inset-0 dark:bg-white bg-black z-30 pointer-events-none"
       />
 
       {/* Independent black side panels */}
       <div
         ref={leftPanelRef}
-        className="absolute top-0 right-full w-[100vw] h-full bg-black dark:bg-void z-30"
+        className="absolute top-0 right-full w-[100vw] h-full dark:bg-white bg-black dark:bg-void z-30"
       />
       <div
         ref={rightPanelRef}
-        className="absolute top-0 left-full w-[100vw] h-full bg-black dark:bg-void z-30"
+        className="absolute top-0 left-full w-[100vw] h-full dark:bg-white bg-black dark:bg-void z-30"
       />
 
       {/* Human hand group */}
       <div
         ref={humanRef}
-        className="absolute -top-[3%] -left-[5%] w-[42vw] md:w-[34vw] z-10"
+        className="absolute top-[2%] -left-[8%] w-[55vw] sm:w-[42vw] md:-top-[3%] md:-left-[5%] md:w-[34vw] z-10"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -250,9 +254,7 @@ export default function Hero({ startAnimation = false }: HeroProps) {
           }}
         />
         <svg
-          className="absolute left-[100%] top-[70%] text-black dark:text-white"
-          width="20"
-          height="20"
+          className="absolute left-[100%] top-[70%] text-black dark:text-white w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
           viewBox="0 0 20 20"
           fill="none"
         >
@@ -263,7 +265,7 @@ export default function Hero({ startAnimation = false }: HeroProps) {
       {/* Robot hand group */}
       <div
         ref={robotRef}
-        className="absolute -bottom-[3%] -right-[5%] w-[38vw] md:w-[30vw] z-10"
+        className="absolute bottom-[2%] -right-[8%] w-[50vw] sm:w-[38vw] md:-bottom-[3%] md:-right-[5%] md:w-[30vw] z-10"
         onMouseMove={handleRobotMouseMove}
         onMouseLeave={handleRobotMouseLeave}
       >
@@ -288,9 +290,7 @@ export default function Hero({ startAnimation = false }: HeroProps) {
           }}
         />
         <svg
-          className="absolute right-[100%] bottom-[100%] text-black dark:text-white"
-          width="20"
-          height="20"
+          className="absolute right-[100%] bottom-[100%] text-black dark:text-white w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
           viewBox="0 0 20 20"
           fill="none"
         >
@@ -302,7 +302,7 @@ export default function Hero({ startAnimation = false }: HeroProps) {
       <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
         <h1
           ref={nameRef}
-          className="text-black dark:text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl whitespace-nowrap opacity-0"
+          className="text-black dark:text-white text-[9vw] sm:text-5xl md:text-6xl lg:text-7xl whitespace-nowrap opacity-0"
           style={{ fontFamily: "var(--font-pixel)" }}
         >
           Aditya Khalkar

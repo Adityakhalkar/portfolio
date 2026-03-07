@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -42,7 +42,7 @@ const PROJECTS: Project[] = [
     title: "greed.js",
     tag: "[LIB / PERF]",
     description:
-      "A JavaScript library that runs pure Python PyTorch code in the browser via WebGPU acceleration. Pyodide + 50+ optimized compute shaders -- full deep learning workflows client-side at 271KB.",
+      "A JavaScript library that runs pure Python PyTorch code in the browser via WebGPU acceleration. Pyodide + 50+ optimized compute shaders - full deep learning workflows client-side at 271KB.",
     hero: { src: "/images/greedjs/logo.png", type: "image" },
     gallery: [
       { src: "/images/greedjs/github.png", type: "image" },
@@ -56,7 +56,7 @@ const PROJECTS: Project[] = [
     title: "DeepUbuntu",
     tag: "[FREELANCE / AV]",
     description:
-      "Freelance build for an autonomous vehicle data startup. Animation-centered visual storytelling designed to convert visitors into inquirers -- smooth scroll sequences, interactive data showcases, and a narrative that sells without pushing.",
+      "Freelance build for an autonomous vehicle data startup. Animation-centered visual storytelling designed to convert visitors into inquirers - smooth scroll sequences, interactive data showcases, and a narrative that sells without pushing.",
     hero: { src: "/images/deepubuntu/deepubuntu-landing.mp4", type: "video", link: "https://deepubuntu.com" },
     gallery: [
       { src: "/images/deepubuntu/arch.png", type: "image", link: "https://deepubuntu.com" },
@@ -118,7 +118,16 @@ function ProjectCard({
   const bracketBR = useRef<HTMLSpanElement>(null);
   const hoverTl = useRef<gsap.core.Timeline | null>(null);
   const delayTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const isEven = index % 2 === 0;
+
+  // Detect mobile (< md breakpoint)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Clip-mask scroll reveal
   useEffect(() => {
@@ -156,6 +165,7 @@ function ProjectCard({
   }, []);
 
   // Build hover timeline ONCE, paused -- play() on enter, reverse() on leave
+  // On mobile: show 2x2 grid permanently, no hover interaction
   useEffect(() => {
     const container = containerRef.current;
     const hero = heroRef.current;
@@ -165,6 +175,20 @@ function ProjectCard({
 
     if (!container || !hero || !text || imgs.some((i) => !i) || brackets.some((b) => !b)) return;
 
+    if (isMobile) {
+      // Mobile: show 2x2 grid permanently, hero takes top-left quadrant
+      gsap.set(imgs, { opacity: 1, scale: 1 });
+      gsap.set(hero, { width: "50%", height: "50%" });
+      gsap.set(container, { scaleX: 1, scaleY: 1, zIndex: 1 });
+      hoverTl.current = null;
+      return () => {
+        [container, hero, text, ...imgs, ...brackets].forEach((el) => {
+          if (el) gsap.set(el, { clearProps: "all" });
+        });
+      };
+    }
+
+    // Desktop: hover expansion
     const scaleXVal = 2;
     const scaleYVal = 1.8;
     const invScaleX = 1 / scaleXVal;
@@ -243,26 +267,26 @@ function ProjectCard({
         if (el) gsap.set(el, { clearProps: "all" });
       });
     };
-  }, [isEven]);
+  }, [isEven, isMobile]);
 
   return (
     <div
       ref={cardRef}
       className={`
         relative flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16
-        min-h-screen px-6 md:px-16
+        py-16 md:py-0 md:min-h-screen px-6 md:px-16
         ${isEven ? "md:flex-row" : "md:flex-row-reverse"}
       `}
     >
       {/* Image side */}
       <div
         className="relative w-full md:w-1/2 z-20"
-        onMouseEnter={() => {
+        onMouseEnter={isMobile ? undefined : () => {
           delayTimer.current = setTimeout(() => {
             hoverTl.current?.play();
           }, 500);
         }}
-        onMouseLeave={() => {
+        onMouseLeave={isMobile ? undefined : () => {
           if (delayTimer.current) {
             clearTimeout(delayTimer.current);
             delayTimer.current = null;
