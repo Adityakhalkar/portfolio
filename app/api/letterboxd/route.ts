@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
-// Change this to your Letterboxd username
-const LETTERBOXD_USERNAME = "adityakhalkar";
+const LETTERBOXD_USERNAME = "MeekOmni";
 
 export async function GET() {
   try {
@@ -18,7 +17,6 @@ export async function GET() {
     const items = xml.match(/<item>[\s\S]*?<\/item>/g) || [];
 
     const films = items.slice(0, 4).map((item) => {
-      // Try namespace-prefixed tags first, fall back to <title>
       const filmTitle =
         item.match(
           /<letterboxd:filmTitle>([\s\S]*?)<\/letterboxd:filmTitle>/
@@ -43,14 +41,21 @@ export async function GET() {
         const half = num % 1 >= 0.5;
         stars = "\u2605".repeat(full) + (half ? "\u00BD" : "");
       } else {
-        // Try to extract stars from <title> like "Film, 2023 - ★★★★"
         const titleStars = item
           .match(/<title>[\s\S]*?<\/title>/)?.[0]
           ?.match(/[\u2605\u00BD]+/)?.[0];
         if (titleStars) stars = titleStars;
       }
 
-      return { title: filmTitle.trim(), rating: stars, link };
+      const poster =
+        item.match(/src="(https:\/\/a\.ltrbxd\.com\/resized\/film-poster[^"]*)"/)?.[1] || "";
+
+      const year =
+        item.match(
+          /<letterboxd:filmYear>([\s\S]*?)<\/letterboxd:filmYear>/
+        )?.[1] || "";
+
+      return { title: filmTitle.trim(), year, rating: stars, link, poster };
     });
 
     return NextResponse.json({ films });
