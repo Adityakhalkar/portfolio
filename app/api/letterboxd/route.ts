@@ -55,7 +55,16 @@ export async function GET() {
           /<letterboxd:filmYear>([\s\S]*?)<\/letterboxd:filmYear>/
         )?.[1] || "";
 
-      return { title: filmTitle.trim(), year, rating: stars, link, poster };
+      // Decode HTML entities like &#039; → '
+      const decoded = filmTitle.trim()
+        .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n)))
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&apos;/g, "'");
+
+      return { title: decoded, year, rating: stars, link, poster };
     });
 
     return NextResponse.json({ films });

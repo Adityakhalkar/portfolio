@@ -22,337 +22,6 @@ function BracketCorners() {
 }
 
 /* ════════════════════════════════════════
-   Scene: Games — Mini breakout
-   ════════════════════════════════════════ */
-function GamesScene({ active }: { active: boolean }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef = useRef(0);
-
-  useEffect(() => {
-    if (!active) {
-      cancelAnimationFrame(rafRef.current);
-      return;
-    }
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const W = 240;
-    const H = 160;
-    canvas.width = W;
-    canvas.height = H;
-
-    const isDark = document.documentElement.classList.contains("dark");
-    const fg = isDark ? "#eaeaea" : "#050505";
-
-    let ballX = W / 2;
-    let ballY = H - 30;
-    let dx = 1.8 * (Math.random() > 0.5 ? 1 : -1);
-    let dy = -1.8;
-    const ballR = 2.5;
-    let paddleX = W / 2 - 20;
-    const paddleW = 36;
-    const paddleH = 4;
-    let autoPlay = true;
-
-    const brickRows = 3;
-    const brickCols = 8;
-    const brickW = W / brickCols - 2;
-    const brickH = 7;
-    const bricks: boolean[][] = [];
-    for (let r = 0; r < brickRows; r++) {
-      bricks[r] = [];
-      for (let c = 0; c < brickCols; c++) {
-        bricks[r][c] = true;
-      }
-    }
-
-    const handleMove = (e: MouseEvent) => {
-      autoPlay = false;
-      const rect = canvas.getBoundingClientRect();
-      paddleX =
-        ((e.clientX - rect.left) / rect.width) * W - paddleW / 2;
-      paddleX = Math.max(0, Math.min(W - paddleW, paddleX));
-    };
-
-    const handleTouch = (e: TouchEvent) => {
-      autoPlay = false;
-      const rect = canvas.getBoundingClientRect();
-      const touch = e.touches[0];
-      if (!touch) return;
-      paddleX =
-        ((touch.clientX - rect.left) / rect.width) * W - paddleW / 2;
-      paddleX = Math.max(0, Math.min(W - paddleW, paddleX));
-    };
-
-    canvas.addEventListener("mousemove", handleMove);
-    canvas.addEventListener("touchmove", handleTouch, { passive: true });
-
-    const loop = () => {
-      ctx.clearRect(0, 0, W, H);
-
-      // Auto-play: paddle follows ball
-      if (autoPlay) {
-        paddleX += (ballX - paddleX - paddleW / 2) * 0.08;
-        paddleX = Math.max(0, Math.min(W - paddleW, paddleX));
-      }
-
-      // Draw bricks
-      for (let r = 0; r < brickRows; r++) {
-        for (let c = 0; c < brickCols; c++) {
-          if (!bricks[r][c]) continue;
-          const bx = c * (brickW + 2) + 1;
-          const by = r * (brickH + 2) + 6;
-          ctx.fillStyle = fg;
-          ctx.fillRect(bx, by, brickW, brickH);
-        }
-      }
-
-      // Move ball
-      ballX += dx;
-      ballY += dy;
-
-      if (ballX < ballR || ballX > W - ballR) dx = -dx;
-      if (ballY < ballR) dy = -dy;
-
-      // Paddle bounce
-      if (
-        ballY > H - paddleH - ballR - 4 &&
-        ballY < H - 2 &&
-        ballX > paddleX - 2 &&
-        ballX < paddleX + paddleW + 2
-      ) {
-        dy = -Math.abs(dy);
-        dx += (ballX - (paddleX + paddleW / 2)) * 0.08;
-      }
-
-      // Brick collision
-      for (let r = 0; r < brickRows; r++) {
-        for (let c = 0; c < brickCols; c++) {
-          if (!bricks[r][c]) continue;
-          const bx = c * (brickW + 2) + 1;
-          const by = r * (brickH + 2) + 6;
-          if (
-            ballX > bx - ballR &&
-            ballX < bx + brickW + ballR &&
-            ballY > by - ballR &&
-            ballY < by + brickH + ballR
-          ) {
-            bricks[r][c] = false;
-            dy = -dy;
-          }
-        }
-      }
-
-      // Reset ball if it falls
-      if (ballY > H + 10) {
-        ballX = W / 2;
-        ballY = H - 30;
-        dx = 1.8 * (Math.random() > 0.5 ? 1 : -1);
-        dy = -1.8;
-      }
-
-      // Check if all bricks cleared -> reset
-      const remaining = bricks.flat().filter(Boolean).length;
-      if (remaining === 0) {
-        for (let r = 0; r < brickRows; r++) {
-          for (let c = 0; c < brickCols; c++) {
-            bricks[r][c] = true;
-          }
-        }
-      }
-
-      // Draw ball
-      ctx.beginPath();
-      ctx.arc(ballX, ballY, ballR, 0, Math.PI * 2);
-      ctx.fillStyle = fg;
-      ctx.fill();
-
-      // Draw paddle
-      ctx.fillStyle = fg;
-      ctx.fillRect(paddleX, H - paddleH - 4, paddleW, paddleH);
-
-      rafRef.current = requestAnimationFrame(loop);
-    };
-
-    rafRef.current = requestAnimationFrame(loop);
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      canvas.removeEventListener("mousemove", handleMove);
-      canvas.removeEventListener("touchmove", handleTouch);
-    };
-  }, [active]);
-
-  return (
-    <div className="flex items-center justify-center h-full p-2">
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full"
-        style={{ imageRendering: "pixelated" }}
-      />
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════
-   Scene: Philosophy — Random rabbit hole
-   ════════════════════════════════════════ */
-const RABBIT_HOLES = [
-  {
-    title: "Simulation hypothesis",
-    url: "https://en.wikipedia.org/wiki/Simulation_hypothesis",
-  },
-  {
-    title: "Boltzmann brain",
-    url: "https://en.wikipedia.org/wiki/Boltzmann_brain",
-  },
-  {
-    title: "Roko's basilisk",
-    url: "https://en.wikipedia.org/wiki/Roko%27s_basilisk",
-  },
-  {
-    title: "Chinese room",
-    url: "https://en.wikipedia.org/wiki/Chinese_room",
-  },
-  {
-    title: "Ship of Theseus",
-    url: "https://en.wikipedia.org/wiki/Ship_of_Theseus",
-  },
-  {
-    title: "Last Thursdayism",
-    url: "https://en.wikipedia.org/wiki/Omphalos_hypothesis",
-  },
-  {
-    title: "Quantum immortality",
-    url: "https://en.wikipedia.org/wiki/Quantum_suicide_and_immortality",
-  },
-  {
-    title: "Philosophical zombie",
-    url: "https://en.wikipedia.org/wiki/Philosophical_zombie",
-  },
-  {
-    title: "Brain in a vat",
-    url: "https://en.wikipedia.org/wiki/Brain_in_a_vat",
-  },
-  {
-    title: "Maxwell's demon",
-    url: "https://en.wikipedia.org/wiki/Maxwell%27s_demon",
-  },
-];
-
-function PhilosophyScene({ active }: { active: boolean }) {
-  const [topic, setTopic] = useState(() =>
-    RABBIT_HOLES[Math.floor(Math.random() * RABBIT_HOLES.length)]
-  );
-
-  useEffect(() => {
-    if (active) {
-      setTopic(
-        RABBIT_HOLES[Math.floor(Math.random() * RABBIT_HOLES.length)]
-      );
-    }
-  }, [active]);
-
-  return (
-    <div className="flex flex-col items-center justify-center h-full gap-3 px-5 text-center">
-      <span
-        className="text-[10px] text-secondary uppercase tracking-widest"
-        style={{ fontFamily: "var(--font-pixel)" }}
-      >
-        today&apos;s rabbit hole
-      </span>
-      <span className="text-sm font-mono text-black dark:text-white">
-        {topic.title}
-      </span>
-      <a
-        href={topic.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-[10px] uppercase tracking-widest underline underline-offset-4 decoration-secondary/40 hover:decoration-black dark:hover:decoration-white transition-colors text-black dark:text-white"
-        style={{ fontFamily: "var(--font-pixel)" }}
-      >
-        go down the rabbit hole -&gt;
-      </a>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════
-   Scene: Web — Pixel art grid
-   ════════════════════════════════════════ */
-function WebScene({ active }: { active: boolean }) {
-  const [grid, setGrid] = useState<boolean[]>(() =>
-    new Array(100).fill(false)
-  );
-  const painting = useRef(false);
-
-  useEffect(() => {
-    if (active) setGrid(new Array(100).fill(false));
-  }, [active]);
-
-  const paintCell = useCallback((i: number) => {
-    setGrid((prev) => {
-      if (prev[i]) return prev;
-      const next = [...prev];
-      next[i] = true;
-      return next;
-    });
-  }, []);
-
-  const toggleCell = useCallback((i: number) => {
-    setGrid((prev) => {
-      const next = [...prev];
-      next[i] = !next[i];
-      return next;
-    });
-  }, []);
-
-  return (
-    <div className="flex flex-col items-center justify-center h-full gap-2">
-      <span
-        className="text-[10px] text-secondary uppercase tracking-widest"
-        style={{ fontFamily: "var(--font-pixel)" }}
-      >
-        draw something
-      </span>
-      <div
-        className="grid gap-[1px]"
-        style={{ gridTemplateColumns: "repeat(10, 1fr)" }}
-        onMouseDown={() => {
-          painting.current = true;
-        }}
-        onMouseUp={() => {
-          painting.current = false;
-        }}
-        onMouseLeave={() => {
-          painting.current = false;
-        }}
-      >
-        {grid.map((filled, i) => (
-          <div
-            key={i}
-            onMouseEnter={() => painting.current && paintCell(i)}
-            onMouseDown={() => {
-              painting.current = true;
-              toggleCell(i);
-            }}
-            onClick={() => toggleCell(i)}
-            className={`w-[13px] h-[13px] border cursor-crosshair transition-colors duration-75 ${
-              filled
-                ? "bg-black dark:bg-white border-black dark:border-white"
-                : "bg-transparent border-black/10 dark:border-white/10"
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════
    Interest config
    ════════════════════════════════════════ */
 interface InterestConfig {
@@ -365,9 +34,6 @@ const INTERESTS: InterestConfig[] = [
   { id: "music", label: "music", Scene: MusicScene },
   { id: "cats", label: "cats", Scene: CatsScene },
   { id: "movies", label: "movies", Scene: MoviesScene },
-  { id: "games", label: "games", Scene: GamesScene },
-  { id: "web", label: "web", Scene: WebScene },
-  { id: "philosophy", label: "philosophy", Scene: PhilosophyScene },
 ];
 
 /* ════════════════════════════════════════
@@ -425,13 +91,14 @@ export default function About() {
     return () => ctx.revert();
   }, []);
 
-  // Stage expand/collapse animation
+  // Stage expand/collapse animation — movies gets a taller panel
   useEffect(() => {
     if (!stageRef.current) return;
 
     if (activeInterest) {
+      const targetHeight = activeInterest === "movies" ? 300 : 180;
       gsap.to(stageRef.current, {
-        height: 180,
+        height: targetHeight,
         opacity: 1,
         duration: 0.4,
         ease: "power3.out",
@@ -512,15 +179,14 @@ export default function About() {
             className="text-base md:text-xl leading-relaxed text-secondary opacity-0"
           >
             I am mostly watching movies, you can talk to me about movies
-            and we will probably get along. I also like music, cats, games,
-            web, and philosophy.
+            and we will probably get along. I also like music and cats.
           </p>
         </div>
 
         {/* ─── Interest tags + interactive stage ─── */}
         <div className="mt-12 md:mt-16" onMouseLeave={handleAreaLeave}>
           {/* Tags row */}
-          <div className="flex flex-wrap gap-x-4 gap-y-3 sm:gap-x-5">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-3 sm:gap-x-5">
             {INTERESTS.map((interest) => (
               <span
                 key={interest.id}
@@ -551,7 +217,7 @@ export default function About() {
             style={{ height: 0, opacity: 0 }}
           >
             <BracketCorners />
-            <div className="h-[180px]">
+            <div className="h-full">
               {ActiveScene && (
                 <ActiveScene
                   active={!!activeInterest}
