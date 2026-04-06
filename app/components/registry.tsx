@@ -7,6 +7,7 @@ import { TabSwitcherDemo, tabSwitcherCode } from "./ui/tab-switcher";
 import { NumberCounterDemo, numberCounterCode } from "./ui/number-counter";
 import { StaggerListDemo, staggerListCode } from "./ui/stagger-list";
 import { ScrambleTextDemo, scrambleTextCode } from "./ui/scramble-text";
+import { ElasticSliderDemo, elasticSliderCode } from "./ui/elastic-slider";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -113,5 +114,14 @@ export const registry: ComponentEntry[] = [
     category: "Text Effects",
     component: ScrambleTextDemo,
     code: scrambleTextCode,
+  },
+  {
+    id: "elastic-slider",
+    name: "Elastic Slider",
+    description:
+      "Drag past min/max and the thumb stretches elastically then snaps back with an overshoot spring. Pointer capture for smooth mobile drag.",
+    category: "Buttons & Interactions",
+    component: ElasticSliderDemo,
+    code: elasticSliderCode,
   },
 ];
