@@ -7,9 +7,7 @@ import gsap from "gsap";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
-  { href: "/templates", label: "Templates" },
-  { href: "/showcase", label: "Showcase" },
-  { href: "/gsap", label: "GSAP" },
+  { href: "/components", label: "Components" },
 ];
 
 export default function Navigation() {
