@@ -97,8 +97,7 @@ export function ElasticSlider({
     if (!track || !thumb || !fill) return;
 
     const rect = track.getBoundingClientRect();
-    const percent = getPercent(valueRef.current);
-    const finalPx = (percent / 100) * rect.width;
+    const finalPx = ((valueRef.current - min) / (max - min)) * rect.width;
 
     thumb.style.transition =
       "left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
@@ -108,7 +107,7 @@ export function ElasticSlider({
     fill.style.width = `${finalPx}px`;
 
     setOvershot(0);
-  }, []);
+  }, [min, max]);
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
