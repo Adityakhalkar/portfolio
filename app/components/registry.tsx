@@ -5,6 +5,7 @@ import { HoldToConfirmDemo, holdToConfirmCode } from "./ui/hold-to-confirm";
 import { FlipLinkDemo, flipLinkCode } from "./ui/flip-link";
 import { TabSwitcherDemo, tabSwitcherCode } from "./ui/tab-switcher";
 import { NumberCounterDemo, numberCounterCode } from "./ui/number-counter";
+import { StaggerListDemo, staggerListCode } from "./ui/stagger-list";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -93,5 +94,14 @@ export const registry: ComponentEntry[] = [
     category: "Data Display",
     component: NumberCounterDemo,
     code: numberCounterCode,
+  },
+  {
+    id: "stagger-list",
+    name: "Stagger List",
+    description:
+      "Children animate in sequentially on scroll enter. Direct DOM writes, no per-item state. Wraps any markup.",
+    category: "Text Effects",
+    component: StaggerListDemo,
+    code: staggerListCode,
   },
 ];
