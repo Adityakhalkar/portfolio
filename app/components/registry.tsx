@@ -8,6 +8,7 @@ import { NumberCounterDemo, numberCounterCode } from "./ui/number-counter";
 import { StaggerListDemo, staggerListCode } from "./ui/stagger-list";
 import { ScrambleTextDemo, scrambleTextCode } from "./ui/scramble-text";
 import { ElasticSliderDemo, elasticSliderCode } from "./ui/elastic-slider";
+import { DockDemo, dockCode } from "./ui/dock";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -123,5 +124,14 @@ export const registry: ComponentEntry[] = [
     category: "Buttons & Interactions",
     component: ElasticSliderDemo,
     code: elasticSliderCode,
+  },
+  {
+    id: "dock",
+    name: "Dock",
+    description:
+      "macOS-style icon row with gaussian magnification around the cursor. transform-origin bottom so items grow upward. Direct DOM writes.",
+    category: "Navigation",
+    component: DockDemo,
+    code: dockCode,
   },
 ];
