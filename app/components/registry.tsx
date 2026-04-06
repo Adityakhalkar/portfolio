@@ -9,6 +9,7 @@ import { StaggerListDemo, staggerListCode } from "./ui/stagger-list";
 import { ScrambleTextDemo, scrambleTextCode } from "./ui/scramble-text";
 import { ElasticSliderDemo, elasticSliderCode } from "./ui/elastic-slider";
 import { DockDemo, dockCode } from "./ui/dock";
+import { ImageTunnelDemo, imageTunnelCode } from "./ui/image-tunnel";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -133,5 +134,14 @@ export const registry: ComponentEntry[] = [
     category: "Navigation",
     component: DockDemo,
     code: dockCode,
+  },
+  {
+    id: "image-tunnel",
+    name: "Image Tunnel",
+    description:
+      "Images arranged in a 3D helix that flies toward you on scroll. Pure CSS perspective + translate3d. Infinite wrap, lerped scroll, touch support.",
+    category: "Cards",
+    component: ImageTunnelDemo,
+    code: imageTunnelCode,
   },
 ];
