@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
+import { ScrambleText } from "@/app/components/ui/scramble-text";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
@@ -139,7 +140,12 @@ export default function Navigation() {
                 }
               `}
             >
-              {item.label}
+              <ScrambleText
+                text={item.label}
+                trigger="hover"
+                duration={400}
+                charset="!@#$%^&*[]{}—=+?"
+              />
             </Link>
           );
         })}
