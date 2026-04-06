@@ -2,11 +2,13 @@ import { MagneticButtonDemo, magneticButtonCode } from "./ui/magnetic-button";
 import { TiltCardDemo, tiltCardCode } from "./ui/tilt-card";
 import { TextRevealDemo, textRevealCode } from "./ui/text-reveal";
 import { HoldToConfirmDemo, holdToConfirmCode } from "./ui/hold-to-confirm";
+import { FlipLinkDemo, flipLinkCode } from "./ui/flip-link";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
   | "Cards"
-  | "Text Effects";
+  | "Text Effects"
+  | "Navigation";
 
 export interface ComponentEntry {
   id: string;
@@ -21,6 +23,7 @@ export const CATEGORIES: ComponentCategory[] = [
   "Buttons & Interactions",
   "Cards",
   "Text Effects",
+  "Navigation",
 ];
 
 export const registry: ComponentEntry[] = [
@@ -59,5 +62,14 @@ export const registry: ComponentEntry[] = [
     category: "Text Effects",
     component: TextRevealDemo,
     code: textRevealCode,
+  },
+  {
+    id: "flip-link",
+    name: "Flip Link",
+    description:
+      "Hover slides the text out upward while a clone slides in from below. Pure CSS via Tailwind group — no JS.",
+    category: "Navigation",
+    component: FlipLinkDemo,
+    code: flipLinkCode,
   },
 ];
