@@ -6,6 +6,7 @@ import { FlipLinkDemo, flipLinkCode } from "./ui/flip-link";
 import { TabSwitcherDemo, tabSwitcherCode } from "./ui/tab-switcher";
 import { NumberCounterDemo, numberCounterCode } from "./ui/number-counter";
 import { StaggerListDemo, staggerListCode } from "./ui/stagger-list";
+import { ScrambleTextDemo, scrambleTextCode } from "./ui/scramble-text";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -103,5 +104,14 @@ export const registry: ComponentEntry[] = [
     category: "Text Effects",
     component: StaggerListDemo,
     code: staggerListCode,
+  },
+  {
+    id: "scramble-text",
+    name: "Scramble Text",
+    description:
+      "Characters cycle through random glyphs before resolving left to right. Trigger on mount or hover. Custom charset supported.",
+    category: "Text Effects",
+    component: ScrambleTextDemo,
+    code: scrambleTextCode,
   },
 ];
