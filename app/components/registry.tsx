@@ -4,12 +4,14 @@ import { TextRevealDemo, textRevealCode } from "./ui/text-reveal";
 import { HoldToConfirmDemo, holdToConfirmCode } from "./ui/hold-to-confirm";
 import { FlipLinkDemo, flipLinkCode } from "./ui/flip-link";
 import { TabSwitcherDemo, tabSwitcherCode } from "./ui/tab-switcher";
+import { NumberCounterDemo, numberCounterCode } from "./ui/number-counter";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
   | "Cards"
   | "Text Effects"
-  | "Navigation";
+  | "Navigation"
+  | "Data Display";
 
 export interface ComponentEntry {
   id: string;
@@ -25,6 +27,7 @@ export const CATEGORIES: ComponentCategory[] = [
   "Cards",
   "Text Effects",
   "Navigation",
+  "Data Display",
 ];
 
 export const registry: ComponentEntry[] = [
@@ -81,5 +84,14 @@ export const registry: ComponentEntry[] = [
     category: "Navigation",
     component: TabSwitcherDemo,
     code: tabSwitcherCode,
+  },
+  {
+    id: "number-counter",
+    name: "Number Counter",
+    description:
+      "Counts from a start value to a target when scrolled into view. ease-out-quart, tabular-nums. Supports prefix, suffix, decimals, separator.",
+    category: "Data Display",
+    component: NumberCounterDemo,
+    code: numberCounterCode,
   },
 ];

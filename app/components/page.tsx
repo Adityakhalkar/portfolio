@@ -25,29 +25,47 @@ export default function ComponentsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-void text-concrete overflow-x-hidden">
+    <main className="min-h-dvh bg-void text-concrete overflow-x-hidden">
       <Navigation />
 
-      <div className="max-w-6xl mx-auto px-6 pt-28 pb-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-24">
         {/* Header */}
-        <div className="mb-16">
+        <div className="mb-10 sm:mb-16">
           <h1
-            className="text-6xl text-concrete tracking-tight mb-3"
+            className="text-4xl sm:text-6xl text-concrete tracking-tight mb-2 sm:mb-3 text-balance"
             style={{ fontFamily: "var(--font-pixel)" }}
           >
             components.
           </h1>
-          <p className="text-secondary text-sm font-['Space_Mono'] max-w-md leading-relaxed">
-            Handcrafted UI components. Thoughtful animations, no bloat.
-            <br />
+          <p className="text-secondary text-xs sm:text-sm font-['Space_Mono'] leading-relaxed text-pretty">
+            Handcrafted UI components. Thoughtful animations, no bloat.{" "}
             <span className="text-concrete/40">{registry.length} components</span>
           </p>
         </div>
 
-        {/* Layout */}
-        <div className="flex gap-12 min-h-[560px]">
-          {/* Sidebar */}
-          <aside className="w-48 flex-shrink-0">
+        {/* Mobile: horizontal scrollable component list */}
+        <div className="md:hidden mb-6 -mx-4 px-4">
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {registry.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => select(item.id)}
+                className={`flex-shrink-0 text-xs px-3 py-1.5 border transition-colors duration-150 font-['Space_Mono'] whitespace-nowrap ${
+                  selectedId === item.id
+                    ? "border-accent text-accent"
+                    : "border-white/10 text-secondary"
+                }`}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop + Mobile layout */}
+        <div className="flex flex-col md:flex-row gap-6 md:gap-12">
+          {/* Sidebar — desktop only */}
+          <aside className="hidden md:block w-48 flex-shrink-0">
             {CATEGORIES.map((cat: ComponentCategory) => {
               const items = registry.filter((c) => c.category === cat);
               if (!items.length) return null;
@@ -83,14 +101,14 @@ export default function ComponentsPage() {
           {/* Main panel */}
           <div className="flex-1 min-w-0">
             {/* Component info */}
-            <div className="mb-6">
+            <div className="mb-5 sm:mb-6">
               <h2
-                className="text-2xl text-concrete mb-1.5"
+                className="text-xl sm:text-2xl text-concrete mb-1 sm:mb-1.5 text-balance"
                 style={{ fontFamily: "var(--font-pixel)" }}
               >
                 {selected.name}
               </h2>
-              <p className="text-secondary text-sm font-['Space_Mono'] leading-relaxed">
+              <p className="text-secondary text-xs sm:text-sm font-['Space_Mono'] leading-relaxed text-pretty">
                 {selected.description}
               </p>
             </div>
@@ -115,7 +133,7 @@ export default function ComponentsPage() {
             {/* Preview */}
             {tab === "preview" && (
               <div
-                className="min-h-80 border border-white/8 border-t-0 flex items-center justify-center"
+                className="min-h-64 sm:min-h-80 border border-white/8 border-t-0 flex items-center justify-center p-6"
                 style={{
                   backgroundImage:
                     "radial-gradient(circle, #1c1c1c 1px, transparent 1px)",
@@ -129,19 +147,18 @@ export default function ComponentsPage() {
             {/* Code */}
             {tab === "code" && (
               <div className="relative border border-white/8 border-t-0 bg-white/[0.02]">
-                {/* Top bar */}
-                <div className="flex items-center justify-between px-5 py-3 border-b border-white/8">
-                  <span className="text-xs text-secondary/50 font-['Space_Mono']">
+                <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/8">
+                  <span className="text-xs text-secondary/50 font-['Space_Mono'] truncate mr-4">
                     {selected.id}.tsx
                   </span>
                   <button
                     onClick={copyCode}
-                    className="text-xs font-['Space_Mono'] transition-colors duration-150 px-3 py-1 border border-white/10 hover:border-accent/40 hover:text-accent text-secondary"
+                    className="flex-shrink-0 text-xs font-['Space_Mono'] transition-colors duration-150 px-3 py-1 border border-white/10 hover:border-accent/40 hover:text-accent text-secondary"
                   >
                     {copied ? "copied ✓" : "copy"}
                   </button>
                 </div>
-                <pre className="p-5 overflow-auto text-xs leading-relaxed font-['JetBrains_Mono',_'Space_Mono',_monospace] text-concrete/70 max-h-[480px]">
+                <pre className="p-4 sm:p-5 overflow-auto text-xs leading-relaxed font-['JetBrains_Mono',_'Space_Mono',_monospace] text-concrete/70 max-h-[60dvh]">
                   <code>{selected.code}</code>
                 </pre>
               </div>
