@@ -24,9 +24,6 @@ export function ScrambleText({
   const rafRef = useRef<number>(0);
 
   const scramble = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-
     const chars = charset.split("");
     const len = text.length;
     const start = performance.now();
@@ -35,6 +32,9 @@ export function ScrambleText({
     cancelAnimationFrame(rafRef.current);
 
     function tick(now: number) {
+      const el = ref.current;
+      if (!el) return;
+
       const elapsed = now - start;
       let output = "";
 
@@ -60,7 +60,6 @@ export function ScrambleText({
     rafRef.current = requestAnimationFrame(tick);
   }, [text, duration, charset]);
 
-  // Mount trigger — fires when scrolled into view
   useEffect(() => {
     if (trigger !== "mount") return;
     const el = ref.current;
@@ -159,9 +158,6 @@ export function ScrambleText({
   const rafRef = useRef<number>(0);
 
   const scramble = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-
     const chars = charset.split("");
     const len = text.length;
     const start = performance.now();
@@ -170,6 +166,9 @@ export function ScrambleText({
     cancelAnimationFrame(rafRef.current);
 
     function tick(now: number) {
+      const el = ref.current;
+      if (!el) return;
+
       const elapsed = now - start;
       let output = "";
 
