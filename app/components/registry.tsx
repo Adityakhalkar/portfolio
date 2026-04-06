@@ -3,6 +3,7 @@ import { TiltCardDemo, tiltCardCode } from "./ui/tilt-card";
 import { TextRevealDemo, textRevealCode } from "./ui/text-reveal";
 import { HoldToConfirmDemo, holdToConfirmCode } from "./ui/hold-to-confirm";
 import { FlipLinkDemo, flipLinkCode } from "./ui/flip-link";
+import { TabSwitcherDemo, tabSwitcherCode } from "./ui/tab-switcher";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -71,5 +72,14 @@ export const registry: ComponentEntry[] = [
     category: "Navigation",
     component: FlipLinkDemo,
     code: flipLinkCode,
+  },
+  {
+    id: "tab-switcher",
+    name: "Tab Switcher",
+    description:
+      "Sliding indicator that morphs between tabs using getBoundingClientRect. Two variants: underline and pill. Keyboard navigable.",
+    category: "Navigation",
+    component: TabSwitcherDemo,
+    code: tabSwitcherCode,
   },
 ];
