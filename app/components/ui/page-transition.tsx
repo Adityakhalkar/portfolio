@@ -10,7 +10,6 @@ export function PageTransitionDemo() {
   const path2Ref = useRef<SVGPathElement>(null);
   const playing = useRef(false);
 
-  // Let GSAP own the transforms from the start — no inline style conflict
   useLayoutEffect(() => {
     gsap.set(shape1Ref.current, { yPercent: -110 });
     gsap.set(shape2Ref.current, { yPercent: 110 });
@@ -32,34 +31,18 @@ export function PageTransitionDemo() {
     const l1 = p1.getTotalLength();
     const l2 = p2.getTotalLength();
 
-    gsap.timeline({
-      onComplete: () => { playing.current = false; },
-    })
+    gsap.timeline({ onComplete: () => { playing.current = false; } })
       .set(s1, { yPercent: -110, xPercent: 0 })
       .set(s2, { yPercent: 110, xPercent: 0 })
       .set(p1, { strokeDasharray: l1, strokeDashoffset: l1, fillOpacity: 0 })
       .set(p2, { strokeDasharray: l2, strokeDashoffset: l2, fillOpacity: 0 })
-
       .to(p1, { strokeDashoffset: 0, duration: 0.35, ease: "power3.inOut" }, 0)
       .to(p2, { strokeDashoffset: 0, duration: 0.35, ease: "power3.inOut" }, 0.05)
       .to(s1, { yPercent: 0, duration: 0.55, ease: "power3.inOut" }, 0.1)
       .to(s2, { yPercent: 0, duration: 0.55, ease: "power3.inOut" }, 0.18)
       .to([p1, p2], { fillOpacity: 1, duration: 0.25 }, 0.3)
-
       .to({}, { duration: 0.3 })
-
       .to([s1, s2], { xPercent: 110, duration: 0.55, ease: "power3.inOut", stagger: 0.07 })
-      .call(() => {
-        gsap.set(s1, { yPercent: -110, xPercent: 0 });
-        gsap.set(s2, { yPercent: 110, xPercent: 0 });
-      });
-  }
-        duration: 0.55,
-        ease: "power3.inOut",
-        stagger: 0.07,
-      })
-
-      // Reset
       .call(() => {
         gsap.set(s1, { yPercent: -110, xPercent: 0 });
         gsap.set(s2, { yPercent: 110, xPercent: 0 });
@@ -70,21 +53,14 @@ export function PageTransitionDemo() {
 
   return (
     <div className="flex flex-col items-center gap-6 w-full">
-      {/* Preview container */}
       <div className="relative w-full h-56 sm:h-72 border border-white/10 overflow-hidden bg-void/50">
-        {/* Fake page content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none select-none">
           <div className="w-32 h-2 bg-white/10 rounded-full" />
           <div className="w-24 h-2 bg-white/6 rounded-full" />
           <div className="w-20 h-2 bg-white/4 rounded-full" />
         </div>
 
-        {/* Shape 1 */}
-        <div
-          ref={shape1Ref}
-          className="absolute inset-0 pointer-events-none"
-          style={{ willChange: "transform" }}
-        >
+        <div ref={shape1Ref} className="absolute inset-0 pointer-events-none" style={{ willChange: "transform" }}>
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
             <path
               ref={path1Ref}
@@ -97,12 +73,7 @@ export function PageTransitionDemo() {
           </svg>
         </div>
 
-        {/* Shape 2 */}
-        <div
-          ref={shape2Ref}
-          className="absolute inset-0 pointer-events-none"
-          style={{ willChange: "transform" }}
-        >
+        <div ref={shape2Ref} className="absolute inset-0 pointer-events-none" style={{ willChange: "transform" }}>
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
             <path
               ref={path2Ref}
@@ -145,7 +116,6 @@ export default function RootLayout({ children }) {
 }
 
 // 2. Use navigate() instead of router.push()
-// In any client component:
 import { usePageTransition } from "@/components/PageTransition";
 
 const { navigate } = usePageTransition();
