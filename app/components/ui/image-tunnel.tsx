@@ -143,6 +143,16 @@ export function ImageTunnel({
 
         el.style.transform = `translate3d(${cur.x}px, ${cur.y}px, ${worldZ}px) rotateZ(${cur.rotate}deg)`;
 
+        // Depth of field — blur far (emerging) and near (approaching)
+        const farBlur = worldZ < -(depth * 0.45)
+          ? Math.min(7, (Math.abs(worldZ) - depth * 0.45) / 70)
+          : 0;
+        const nearBlur = worldZ > -280
+          ? Math.min(7, (worldZ + 280) / 35)
+          : 0;
+        const blur = Math.max(farBlur, nearBlur);
+        el.style.filter = blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : "none";
+
         // Fade near viewer
         const proximity = 1 - Math.max(0, Math.min(1, (worldZ + 200) / 200));
         el.style.opacity = String(proximity);
