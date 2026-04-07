@@ -6,6 +6,7 @@ import SmoothScroll from "../components/SmoothScroll";
 import CustomCursor from "@/components/CustomCursor";
 import GrainOverlay from "@/components/GrainOverlay";
 import LightbulbAnimation from "@/components/toggle";
+import { PageTransition } from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "Aditya Khalkar | Creative Technologist",
@@ -31,7 +32,9 @@ export default function RootLayout({
           <CustomCursor />
           <GrainOverlay />
           <LightbulbAnimation />
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </ThemeProvider>
       </body>
     </html>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrambleText } from "@/app/components/ui/scramble-text";
+import { usePageTransition } from "@/components/PageTransition";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
@@ -13,6 +14,7 @@ const NAV_ITEMS = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { navigate } = usePageTransition();
   const innerRef = useRef<HTMLDivElement>(null);
   const bracketLeftRef = useRef<HTMLSpanElement>(null);
   const bracketRightRef = useRef<HTMLSpanElement>(null);
@@ -127,6 +129,10 @@ export default function Navigation() {
               key={item.href}
               href={item.href}
               ref={isActive ? activeItemRef : undefined}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(item.href);
+              }}
               className={`
                 relative py-1.5 text-sm tracking-wider uppercase whitespace-nowrap
                 transition-all duration-300 ease-out
