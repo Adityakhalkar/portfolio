@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrambleText } from "@/app/components/ui/scramble-text";
-import { usePageTransition } from "@/components/PageTransition";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
@@ -14,7 +13,6 @@ const NAV_ITEMS = [
 
 export default function Navigation() {
   const pathname = usePathname();
-  const { navigate } = usePageTransition();
   const innerRef = useRef<HTMLDivElement>(null);
   const bracketLeftRef = useRef<HTMLSpanElement>(null);
   const bracketRightRef = useRef<HTMLSpanElement>(null);
