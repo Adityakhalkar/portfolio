@@ -1,15 +1,20 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 
-// Standalone demo — plays the animation in isolation, no route change needed
 export function PageTransitionDemo() {
   const shape1Ref = useRef<HTMLDivElement>(null);
   const shape2Ref = useRef<HTMLDivElement>(null);
   const path1Ref = useRef<SVGPathElement>(null);
   const path2Ref = useRef<SVGPathElement>(null);
   const playing = useRef(false);
+
+  // Let GSAP own the transforms from the start — no inline style conflict
+  useLayoutEffect(() => {
+    gsap.set(shape1Ref.current, { yPercent: -110 });
+    gsap.set(shape2Ref.current, { yPercent: 110 });
+  }, []);
 
   function play() {
     if (playing.current) return;
@@ -19,35 +24,36 @@ export function PageTransitionDemo() {
     const s2 = shape2Ref.current;
     const p1 = path1Ref.current;
     const p2 = path2Ref.current;
-    if (!s1 || !s2 || !p1 || !p2) return;
+    if (!s1 || !s2 || !p1 || !p2) {
+      playing.current = false;
+      return;
+    }
 
     const l1 = p1.getTotalLength();
     const l2 = p2.getTotalLength();
 
-    const tl = gsap.timeline({
+    gsap.timeline({
       onComplete: () => { playing.current = false; },
-    });
-
-    tl.set(s1, { yPercent: -110, xPercent: 0 })
+    })
+      .set(s1, { yPercent: -110, xPercent: 0 })
       .set(s2, { yPercent: 110, xPercent: 0 })
       .set(p1, { strokeDasharray: l1, strokeDashoffset: l1, fillOpacity: 0 })
       .set(p2, { strokeDasharray: l2, strokeDashoffset: l2, fillOpacity: 0 })
 
-      // Stroke draws in
       .to(p1, { strokeDashoffset: 0, duration: 0.35, ease: "power3.inOut" }, 0)
       .to(p2, { strokeDashoffset: 0, duration: 0.35, ease: "power3.inOut" }, 0.05)
-
-      // Shapes enter + fill
       .to(s1, { yPercent: 0, duration: 0.55, ease: "power3.inOut" }, 0.1)
       .to(s2, { yPercent: 0, duration: 0.55, ease: "power3.inOut" }, 0.18)
       .to([p1, p2], { fillOpacity: 1, duration: 0.25 }, 0.3)
 
-      // Hold
-      .to({}, { duration: 0.25 })
+      .to({}, { duration: 0.3 })
 
-      // Exit — sweep right
-      .to([s1, s2], {
-        xPercent: 110,
+      .to([s1, s2], { xPercent: 110, duration: 0.55, ease: "power3.inOut", stagger: 0.07 })
+      .call(() => {
+        gsap.set(s1, { yPercent: -110, xPercent: 0 });
+        gsap.set(s2, { yPercent: 110, xPercent: 0 });
+      });
+  }
         duration: 0.55,
         ease: "power3.inOut",
         stagger: 0.07,
@@ -77,7 +83,7 @@ export function PageTransitionDemo() {
         <div
           ref={shape1Ref}
           className="absolute inset-0 pointer-events-none"
-          style={{ transform: "translateY(-110%)", willChange: "transform" }}
+          style={{ willChange: "transform" }}
         >
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
             <path
@@ -95,7 +101,7 @@ export function PageTransitionDemo() {
         <div
           ref={shape2Ref}
           className="absolute inset-0 pointer-events-none"
-          style={{ transform: "translateY(110%)", willChange: "transform" }}
+          style={{ willChange: "transform" }}
         >
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
             <path
