@@ -1,21 +1,72 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
+export type TunnelLayout = "spiral" | "cross" | "random";
+
+interface BasePos { x: number; y: number; z: number; rotate: number; }
+
+function computePositions(
+  count: number,
+  layout: TunnelLayout,
+  depth: number,
+  radius: number,
+  imagesPerLoop: number
+): BasePos[] {
+  const spacing = depth / count;
+
+  return Array.from({ length: count }, (_, i) => {
+    const z = -(i * spacing);
+    let x = 0, y = 0, rotate = 0;
+
+    if (layout === "spiral") {
+      const angle = (i / imagesPerLoop) * Math.PI * 2;
+      x = radius * Math.cos(angle);
+      y = radius * Math.sin(angle);
+      rotate = (angle * 180) / Math.PI;
+
+    } else if (layout === "cross") {
+      const arm = i % 4;
+      const offsets = [
+        { x: 0,       y: -radius },
+        { x: radius,  y: 0       },
+        { x: 0,       y: radius  },
+        { x: -radius, y: 0       },
+      ];
+      x = offsets[arm].x;
+      y = offsets[arm].y;
+      rotate = arm * 90;
+
+    } else {
+      // Fibonacci / golden-angle distribution — uniform, not truly random
+      const goldenAngle = 2.39996; // radians
+      const angle = i * goldenAngle;
+      const r = radius * Math.sqrt((i % imagesPerLoop) / imagesPerLoop + 0.3);
+      x = r * Math.cos(angle);
+      y = r * Math.sin(angle);
+      rotate = (angle * 180) / Math.PI;
+    }
+
+    return { x, y, z, rotate };
+  });
+}
+
 interface ImageTunnelProps {
   images: string[];
-  depth?: number;        // total tunnel length in px
-  radius?: number;       // helix radius in px
-  imagesPerLoop?: number; // how many images per full spiral rotation
-  speed?: number;        // scroll multiplier
+  layout?: TunnelLayout;
+  depth?: number;
+  radius?: number;
+  imagesPerLoop?: number;
+  speed?: number;
   perspective?: number;
   className?: string;
 }
 
 export function ImageTunnel({
   images,
+  layout = "spiral",
   depth = 2400,
   radius = 280,
   imagesPerLoop = 6,
@@ -23,24 +74,30 @@ export function ImageTunnel({
   perspective = 900,
   className,
 }: ImageTunnelProps) {
+  const count = images.length;
+  const spacing = depth / count;
+
   const containerRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<HTMLDivElement[]>([]);
   const scrollZ = useRef(0);
   const targetZ = useRef(0);
   const rafRef = useRef<number>(0);
-  const count = images.length;
-  const spacing = depth / count;
 
-  // Base positions along the helix
-  const basePositions = images.map((_, i) => {
-    const angle = (i / imagesPerLoop) * Math.PI * 2;
-    const z = -(i * spacing); // start spread away from viewer
-    const x = radius * Math.cos(angle);
-    const y = radius * Math.sin(angle);
-    const rotate = (angle * 180) / Math.PI;
-    return { x, y, z, rotate };
-  });
+  // Live XY positions, lerped toward target on layout switch
+  const currentXY = useRef(
+    computePositions(count, layout, depth, radius, imagesPerLoop).map(p => ({ x: p.x, y: p.y, rotate: p.rotate }))
+  );
+  const targetXY = useRef(currentXY.current.map(p => ({ ...p })));
+  // Z is always derived from scroll — doesn't change with layout
+  const baseZ = useRef(
+    Array.from({ length: count }, (_, i) => -(i * spacing))
+  );
+
+  // When layout prop changes, update target XY
+  useEffect(() => {
+    const newPos = computePositions(count, layout, depth, radius, imagesPerLoop);
+    targetXY.current = newPos.map(p => ({ x: p.x, y: p.y, rotate: p.rotate }));
+  }, [layout, count, depth, radius, imagesPerLoop]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -51,42 +108,42 @@ export function ImageTunnel({
       targetZ.current += e.deltaY * speed;
     };
 
-    const onTouch = (() => {
-      let lastY = 0;
-      return {
-        start: (e: TouchEvent) => { lastY = e.touches[0].clientY; },
-        move: (e: TouchEvent) => {
-          e.preventDefault();
-          const dy = lastY - e.touches[0].clientY;
-          targetZ.current += dy * speed * 2;
-          lastY = e.touches[0].clientY;
-        },
-      };
-    })();
+    let lastTouchY = 0;
+    const onTouchStart = (e: TouchEvent) => { lastTouchY = e.touches[0].clientY; };
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      const dy = lastTouchY - e.touches[0].clientY;
+      targetZ.current += dy * speed * 2;
+      lastTouchY = e.touches[0].clientY;
+    };
 
     container.addEventListener("wheel", onWheel, { passive: false });
-    container.addEventListener("touchstart", onTouch.start, { passive: true });
-    container.addEventListener("touchmove", onTouch.move, { passive: false });
+    container.addEventListener("touchstart", onTouchStart, { passive: true });
+    container.addEventListener("touchmove", onTouchMove, { passive: false });
 
     function tick() {
-      // Lerp scroll
+      // Lerp scroll Z
       scrollZ.current += (targetZ.current - scrollZ.current) * 0.08;
 
       itemRefs.current.forEach((el, i) => {
         if (!el) return;
-        const base = basePositions[i];
 
-        // World Z = base Z + scroll offset, wrapped within tunnel depth
-        let worldZ = base.z + scrollZ.current;
+        // Lerp XY toward target layout
+        const cur = currentXY.current[i];
+        const tgt = targetXY.current[i];
+        cur.x += (tgt.x - cur.x) * 0.1;
+        cur.y += (tgt.y - cur.y) * 0.1;
+        cur.rotate += (tgt.rotate - cur.rotate) * 0.1;
 
-        // Wrap: when image passes viewer (z > nearClip), teleport to back
+        // Wrap Z infinitely
+        let worldZ = baseZ.current[i] + scrollZ.current;
         const nearClip = spacing;
         worldZ = ((worldZ + nearClip) % depth) - nearClip;
         if (worldZ > nearClip) worldZ -= depth;
 
-        el.style.transform = `translate3d(${base.x}px, ${base.y}px, ${worldZ}px) rotateZ(${base.rotate}deg)`;
+        el.style.transform = `translate3d(${cur.x}px, ${cur.y}px, ${worldZ}px) rotateZ(${cur.rotate}deg)`;
 
-        // Fade out as it gets too close (within 200px of viewer)
+        // Fade near viewer
         const proximity = 1 - Math.max(0, Math.min(1, (worldZ + 200) / 200));
         el.style.opacity = String(proximity);
       });
@@ -99,10 +156,10 @@ export function ImageTunnel({
     return () => {
       cancelAnimationFrame(rafRef.current);
       container.removeEventListener("wheel", onWheel);
-      container.removeEventListener("touchstart", onTouch.start);
-      container.removeEventListener("touchmove", onTouch.move);
+      container.removeEventListener("touchstart", onTouchStart);
+      container.removeEventListener("touchmove", onTouchMove);
     };
-  }, [basePositions, depth, spacing]);
+  }, [depth, spacing, speed]);
 
   return (
     <div
@@ -110,9 +167,7 @@ export function ImageTunnel({
       className={cn("relative overflow-hidden cursor-ns-resize", className)}
       style={{ perspective, perspectiveOrigin: "50% 50%" }}
     >
-      {/* Scene — transform-style preserve-3d so children live in 3D space */}
       <div
-        ref={sceneRef}
         className="absolute inset-0 flex items-center justify-center"
         style={{ transformStyle: "preserve-3d" }}
       >
@@ -121,11 +176,7 @@ export function ImageTunnel({
             key={i}
             ref={(el) => { if (el) itemRefs.current[i] = el; }}
             className="absolute"
-            style={{
-              transformStyle: "preserve-3d",
-              willChange: "transform",
-              transform: `translate3d(${basePositions[i].x}px, ${basePositions[i].y}px, ${basePositions[i].z}px) rotateZ(${basePositions[i].rotate}deg)`,
-            }}
+            style={{ willChange: "transform" }}
           >
             <div className="relative w-36 h-24 sm:w-44 sm:h-28 overflow-hidden rounded-sm border border-white/10">
               <Image
@@ -144,14 +195,8 @@ export function ImageTunnel({
       {/* Vignette */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse at center, transparent 30%, black 100%)",
-        }}
+        style={{ background: "radial-gradient(ellipse at center, transparent 30%, black 100%)" }}
       />
-
-      <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-white/20 font-['Space_Mono'] pointer-events-none">
-        scroll to fly
-      </p>
     </div>
   );
 }
@@ -172,23 +217,85 @@ const DEMO_IMAGES = [
   "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=400&q=80",
 ];
 
+const LAYOUTS: { value: TunnelLayout; label: string }[] = [
+  { value: "spiral", label: "Spiral" },
+  { value: "cross",  label: "Cross"  },
+  { value: "random", label: "Random" },
+];
+
 export function ImageTunnelDemo() {
+  const [layout, setLayout] = useState<TunnelLayout>("spiral");
+
   return (
-    <ImageTunnel
-      images={DEMO_IMAGES}
-      className="w-full h-72 sm:h-96"
-    />
+    <div className="flex flex-col gap-4 w-full">
+      {/* Layout toggles */}
+      <div className="flex justify-center gap-2">
+        {LAYOUTS.map((l) => (
+          <button
+            key={l.value}
+            onClick={() => setLayout(l.value)}
+            className={cn(
+              "text-xs px-4 py-1.5 border font-['Space_Mono'] tracking-widest uppercase transition-colors duration-150",
+              layout === l.value
+                ? "border-accent text-accent"
+                : "border-white/10 text-white/40 hover:text-white/70 hover:border-white/30"
+            )}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
+
+      <ImageTunnel
+        images={DEMO_IMAGES}
+        layout={layout}
+        className="w-full h-72 sm:h-96"
+      />
+
+      <p className="text-center text-xs text-white/20 font-['Space_Mono']">
+        scroll inside to fly through
+      </p>
+    </div>
   );
 }
 
 export const imageTunnelCode = `"use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
+export type TunnelLayout = "spiral" | "cross" | "random";
+
+interface BasePos { x: number; y: number; z: number; rotate: number; }
+
+function computePositions(count: number, layout: TunnelLayout, depth: number, radius: number, imagesPerLoop: number): BasePos[] {
+  const spacing = depth / count;
+  return Array.from({ length: count }, (_, i) => {
+    const z = -(i * spacing);
+    let x = 0, y = 0, rotate = 0;
+    if (layout === "spiral") {
+      const angle = (i / imagesPerLoop) * Math.PI * 2;
+      x = radius * Math.cos(angle); y = radius * Math.sin(angle);
+      rotate = (angle * 180) / Math.PI;
+    } else if (layout === "cross") {
+      const arm = i % 4;
+      const offsets = [{ x: 0, y: -radius },{ x: radius, y: 0 },{ x: 0, y: radius },{ x: -radius, y: 0 }];
+      x = offsets[arm].x; y = offsets[arm].y; rotate = arm * 90;
+    } else {
+      const goldenAngle = 2.39996;
+      const angle = i * goldenAngle;
+      const r = radius * Math.sqrt((i % imagesPerLoop) / imagesPerLoop + 0.3);
+      x = r * Math.cos(angle); y = r * Math.sin(angle);
+      rotate = (angle * 180) / Math.PI;
+    }
+    return { x, y, z, rotate };
+  });
+}
+
 interface ImageTunnelProps {
   images: string[];
+  layout?: TunnelLayout;
   depth?: number;
   radius?: number;
   imagesPerLoop?: number;
@@ -197,103 +304,65 @@ interface ImageTunnelProps {
   className?: string;
 }
 
-export function ImageTunnel({
-  images,
-  depth = 2400,
-  radius = 280,
-  imagesPerLoop = 6,
-  speed = 1.2,
-  perspective = 900,
-  className,
-}: ImageTunnelProps) {
+export function ImageTunnel({ images, layout = "spiral", depth = 2400, radius = 280, imagesPerLoop = 6, speed = 1.2, perspective = 900, className }: ImageTunnelProps) {
+  const count = images.length;
+  const spacing = depth / count;
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<HTMLDivElement[]>([]);
   const scrollZ = useRef(0);
   const targetZ = useRef(0);
   const rafRef = useRef<number>(0);
-  const count = images.length;
-  const spacing = depth / count;
+  const currentXY = useRef(computePositions(count, layout, depth, radius, imagesPerLoop).map(p => ({ x: p.x, y: p.y, rotate: p.rotate })));
+  const targetXY = useRef(currentXY.current.map(p => ({ ...p })));
+  const baseZ = useRef(Array.from({ length: count }, (_, i) => -(i * spacing)));
 
-  const basePositions = images.map((_, i) => {
-    const angle = (i / imagesPerLoop) * Math.PI * 2;
-    const z = -(i * spacing);
-    const x = radius * Math.cos(angle);
-    const y = radius * Math.sin(angle);
-    const rotate = (angle * 180) / Math.PI;
-    return { x, y, z, rotate };
-  });
+  useEffect(() => {
+    const newPos = computePositions(count, layout, depth, radius, imagesPerLoop);
+    targetXY.current = newPos.map(p => ({ x: p.x, y: p.y, rotate: p.rotate }));
+  }, [layout, count, depth, radius, imagesPerLoop]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      targetZ.current += e.deltaY * speed;
-    };
-
-    let lastY = 0;
-    const onTouchStart = (e: TouchEvent) => { lastY = e.touches[0].clientY; };
-    const onTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
-      const dy = lastY - e.touches[0].clientY;
-      targetZ.current += dy * speed * 2;
-      lastY = e.touches[0].clientY;
-    };
-
+    const onWheel = (e: WheelEvent) => { e.preventDefault(); targetZ.current += e.deltaY * speed; };
+    let lastTouchY = 0;
+    const onTouchStart = (e: TouchEvent) => { lastTouchY = e.touches[0].clientY; };
+    const onTouchMove = (e: TouchEvent) => { e.preventDefault(); const dy = lastTouchY - e.touches[0].clientY; targetZ.current += dy * speed * 2; lastTouchY = e.touches[0].clientY; };
     container.addEventListener("wheel", onWheel, { passive: false });
     container.addEventListener("touchstart", onTouchStart, { passive: true });
     container.addEventListener("touchmove", onTouchMove, { passive: false });
-
     function tick() {
       scrollZ.current += (targetZ.current - scrollZ.current) * 0.08;
-
       itemRefs.current.forEach((el, i) => {
         if (!el) return;
-        const base = basePositions[i];
-        let worldZ = base.z + scrollZ.current;
+        const cur = currentXY.current[i];
+        const tgt = targetXY.current[i];
+        cur.x += (tgt.x - cur.x) * 0.1;
+        cur.y += (tgt.y - cur.y) * 0.1;
+        cur.rotate += (tgt.rotate - cur.rotate) * 0.1;
+        let worldZ = baseZ.current[i] + scrollZ.current;
         const nearClip = spacing;
         worldZ = ((worldZ + nearClip) % depth) - nearClip;
         if (worldZ > nearClip) worldZ -= depth;
-        el.style.transform = \`translate3d(\${base.x}px, \${base.y}px, \${worldZ}px) rotateZ(\${base.rotate}deg)\`;
-        const proximity = 1 - Math.max(0, Math.min(1, (worldZ + 200) / 200));
-        el.style.opacity = String(proximity);
+        el.style.transform = \`translate3d(\${cur.x}px, \${cur.y}px, \${worldZ}px) rotateZ(\${cur.rotate}deg)\`;
+        el.style.opacity = String(1 - Math.max(0, Math.min(1, (worldZ + 200) / 200)));
       });
-
       rafRef.current = requestAnimationFrame(tick);
     }
-
     rafRef.current = requestAnimationFrame(tick);
-
     return () => {
       cancelAnimationFrame(rafRef.current);
       container.removeEventListener("wheel", onWheel);
       container.removeEventListener("touchstart", onTouchStart);
       container.removeEventListener("touchmove", onTouchMove);
     };
-  }, [basePositions, depth, spacing, speed]);
+  }, [depth, spacing, speed]);
 
   return (
-    <div
-      ref={containerRef}
-      className={cn("relative overflow-hidden cursor-ns-resize", className)}
-      style={{ perspective, perspectiveOrigin: "50% 50%" }}
-    >
-      <div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{ transformStyle: "preserve-3d" }}
-      >
+    <div ref={containerRef} className={cn("relative overflow-hidden cursor-ns-resize", className)} style={{ perspective, perspectiveOrigin: "50% 50%" }}>
+      <div className="absolute inset-0 flex items-center justify-center" style={{ transformStyle: "preserve-3d" }}>
         {images.map((src, i) => (
-          <div
-            key={i}
-            ref={(el) => { if (el) itemRefs.current[i] = el; }}
-            className="absolute"
-            style={{
-              transformStyle: "preserve-3d",
-              willChange: "transform",
-              transform: \`translate3d(\${basePositions[i].x}px, \${basePositions[i].y}px, \${basePositions[i].z}px) rotateZ(\${basePositions[i].rotate}deg)\`,
-            }}
-          >
+          <div key={i} ref={(el) => { if (el) itemRefs.current[i] = el; }} className="absolute" style={{ willChange: "transform" }}>
             <div className="relative w-44 h-28 overflow-hidden rounded-sm border border-white/10">
               <Image src={src} alt="" fill className="object-cover" sizes="176px" draggable={false} />
             </div>
