@@ -127,11 +127,7 @@ export default function Navigation() {
               key={item.href}
               href={item.href}
               ref={isActive ? activeItemRef : undefined}
-              onClick={(e) => {
-                e.preventDefault();
-                navigate(item.href);
-              }}
-              className={`
+className={`
                 relative py-1.5 text-sm tracking-wider uppercase whitespace-nowrap
                 transition-all duration-300 ease-out
                 ${hidden
