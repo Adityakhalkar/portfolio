@@ -10,13 +10,15 @@ import { ScrambleTextDemo, scrambleTextCode } from "./ui/scramble-text";
 import { ElasticSliderDemo, elasticSliderCode } from "./ui/elastic-slider";
 import { DockDemo, dockCode } from "./ui/dock";
 import { ImageTunnelDemo, imageTunnelCode } from "./ui/image-tunnel";
+import { LandingRevealDemo, landingRevealCode } from "./ui/landing-reveal";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
   | "Cards"
   | "Text Effects"
   | "Navigation"
-  | "Data Display";
+  | "Data Display"
+  | "Page & Layout";
 
 export interface ComponentEntry {
   id: string;
@@ -33,6 +35,7 @@ export const CATEGORIES: ComponentCategory[] = [
   "Text Effects",
   "Navigation",
   "Data Display",
+  "Page & Layout",
 ];
 
 export const registry: ComponentEntry[] = [
@@ -143,5 +146,14 @@ export const registry: ComponentEntry[] = [
     category: "Cards",
     component: ImageTunnelDemo,
     code: imageTunnelCode,
+  },
+  {
+    id: "landing-reveal",
+    name: "Landing Reveal",
+    description:
+      "Cinematic preloader with SVG circular progress, terminal corner UI, and a clip-path horizontal wipe that reveals a zoom-in hero. GSAP-sequenced.",
+    category: "Page & Layout",
+    component: LandingRevealDemo,
+    code: landingRevealCode,
   },
 ];
