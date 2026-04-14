@@ -4,12 +4,11 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
+import { ScrambleText } from "@/app/components/ui/scramble-text";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
-  { href: "/templates", label: "Templates" },
-  { href: "/showcase", label: "Showcase" },
-  { href: "/gsap", label: "GSAP" },
+  { href: "/components", label: "Components" },
 ];
 
 export default function Navigation() {
@@ -128,6 +127,10 @@ export default function Navigation() {
               key={item.href}
               href={item.href}
               ref={isActive ? activeItemRef : undefined}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(item.href);
+              }}
               className={`
                 relative py-1.5 text-sm tracking-wider uppercase whitespace-nowrap
                 transition-all duration-300 ease-out
@@ -141,7 +144,12 @@ export default function Navigation() {
                 }
               `}
             >
-              {item.label}
+              <ScrambleText
+                text={item.label}
+                trigger="hover"
+                duration={400}
+                charset="!@#$%^&*[]{}—=+?"
+              />
             </Link>
           );
         })}
