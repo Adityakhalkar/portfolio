@@ -11,6 +11,13 @@ import { ElasticSliderDemo, elasticSliderCode } from "./ui/elastic-slider";
 import { DockDemo, dockCode } from "./ui/dock";
 import { ImageTunnelDemo, imageTunnelCode } from "./ui/image-tunnel";
 import { LandingRevealDemo, landingRevealCode } from "./ui/landing-reveal";
+import { OverlayWipeDemo, overlayWipeCode } from "./ui/overlay-wipe";
+import { CountdownBurstDemo, countdownBurstCode } from "./ui/countdown-burst";
+import { CameraIrisDemo, cameraIrisCode } from "./ui/camera-iris";
+import { SplitRevealDemo, splitRevealCode } from "./ui/split-reveal";
+import { VerticalBlindsDemo, verticalBlindsCode } from "./ui/vertical-blinds";
+import { TypewriterTerminalDemo, typewriterTerminalCode } from "./ui/typewriter-terminal";
+import { SignalLockDemo, signalLockCode } from "./ui/signal-lock";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -155,5 +162,68 @@ export const registry: ComponentEntry[] = [
     category: "Page & Layout",
     component: LandingRevealDemo,
     code: landingRevealCode,
+  },
+  {
+    id: "overlay-wipe",
+    name: "Overlay Wipe",
+    description:
+      "Three colored planes — void, accent, concrete — wipe off right in tight succession, peeling away to expose the hero beneath. Pure translateX stagger.",
+    category: "Page & Layout",
+    component: OverlayWipeDemo,
+    code: overlayWipeCode,
+  },
+  {
+    id: "countdown-burst",
+    name: "Countdown Burst",
+    description:
+      "5 → 4 → 3 → 2 → 1. Each number slams in at scale 3.5 then shrinks away. Hard flash cut to hero at zero. GSAP call() drives textContent directly.",
+    category: "Page & Layout",
+    component: CountdownBurstDemo,
+    code: countdownBurstCode,
+  },
+  {
+    id: "camera-iris",
+    name: "Camera Iris",
+    description:
+      "Preloader exits via clip-path: circle() collapsing to a point — a lens iris snapping shut. Hero and words reveal as the circle closes.",
+    category: "Page & Layout",
+    component: CameraIrisDemo,
+    code: cameraIrisCode,
+  },
+  {
+    id: "split-reveal",
+    name: "Split Reveal",
+    description:
+      "Preloader splits down the center — left half slides left, right half slides right — exposing the hero through the widening gap. Seam line glows before split.",
+    category: "Page & Layout",
+    component: SplitRevealDemo,
+    code: splitRevealCode,
+  },
+  {
+    id: "vertical-blinds",
+    name: "Vertical Blinds",
+    description:
+      "10 vertical strips collapse scaleX to zero from the center outward, revealing the hero through the gaps like venetian blinds opening.",
+    category: "Page & Layout",
+    component: VerticalBlindsDemo,
+    code: verticalBlindsCode,
+  },
+  {
+    id: "typewriter-terminal",
+    name: "Typewriter Terminal",
+    description:
+      "Boot sequence types itself line by line via GSAP call(). Terminal aesthetic with monospace font and accent-colored text. Flash cut to hero on enter.",
+    category: "Page & Layout",
+    component: TypewriterTerminalDemo,
+    code: typewriterTerminalCode,
+  },
+  {
+    id: "signal-lock",
+    name: "Signal Lock",
+    description:
+      "Three scanline sweeps clear the hero from noise — CSS filter brightness/contrast/blur degrades then fully resolves. Glowing scanline with box-shadow.",
+    category: "Page & Layout",
+    component: SignalLockDemo,
+    code: signalLockCode,
   },
 ];
