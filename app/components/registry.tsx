@@ -18,6 +18,7 @@ import { SplitRevealDemo, splitRevealCode } from "./ui/split-reveal";
 import { VerticalBlindsDemo, verticalBlindsCode } from "./ui/vertical-blinds";
 import { TypewriterTerminalDemo, typewriterTerminalCode } from "./ui/typewriter-terminal";
 import { SignalLockDemo, signalLockCode } from "./ui/signal-lock";
+import { ServiceHoverDemo, serviceHoverCode } from "./ui/service-hover";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -63,6 +64,15 @@ export const registry: ComponentEntry[] = [
     category: "Buttons & Interactions",
     component: HoldToConfirmDemo,
     code: holdToConfirmCode,
+  },
+  {
+    id: "service-hover",
+    name: "Service Hover",
+    description:
+      "Services list where each row expands on hover — staggered image stack fans in, physics-simulated tags drop and collide via Matter.js. GSAP + real gravity.",
+    category: "Cards",
+    component: ServiceHoverDemo,
+    code: serviceHoverCode,
   },
   {
     id: "tilt-card",
