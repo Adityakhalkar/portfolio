@@ -7,6 +7,7 @@ import Hero from "@/components/Hero";
 import MyWork from "@/components/MyWork";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
+import Contact from "@/components/Contact";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -24,6 +25,7 @@ export default function Home() {
         <MyWork />
         <About />
         <Skills />
+        <Contact />
 
         <footer className="py-12 text-center text-secondary font-['Inter'] text-sm">
           <p>&copy; {new Date().getFullYear()} Aditya Khalkar. All rights reserved.</p>

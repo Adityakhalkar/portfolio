@@ -10,6 +10,7 @@ interface GalleryItem {
   src: string;
   type: "image" | "video";
   link?: string;
+  caption?: string;
 }
 
 interface Project {
@@ -19,7 +20,9 @@ interface Project {
   description: string;
   hero: GalleryItem;
   gallery: GalleryItem[];
-  link: string;
+  link?: string;
+  /* Shown instead of the CTA when the live site is gone. */
+  status?: string;
 }
 
 const PROJECTS: Project[] = [
@@ -56,19 +59,28 @@ const PROJECTS: Project[] = [
     title: "DeepUbuntu",
     tag: "[FREELANCE / AV]",
     description:
-      "Freelance build for an autonomous vehicle data startup. Animation-centered visual storytelling designed to convert visitors into inquirers - smooth scroll sequences, interactive data showcases, and a narrative that sells without pushing.",
-    hero: { src: "/images/deepubuntu/deepubuntu-landing.mp4", type: "video", link: "https://deepubuntu.com" },
+      "Paid rebuild for an autonomous vehicle data startup. They were selling hard-won datasets from unpaved roads and bad weather, but the site was a template that listed features like every other AI company. I rebuilt it around scroll-driven storytelling so the pipeline animates as you move through it and the product explains itself.",
+    hero: {
+      src: "/images/deepubuntu/deepubuntu-landing.mp4",
+      type: "video",
+      caption: "After / Dec 2025",
+    },
     gallery: [
-      { src: "/images/deepubuntu/arch.png", type: "image", link: "https://deepubuntu.com" },
-      { src: "/images/deepubuntu/deepav.mp4", type: "video", link: "https://deepubuntu.com" },
-      { src: "/images/deepubuntu/blog.png", type: "image", link: "https://deepubuntu.com" },
+      {
+        src: "/images/deepubuntu/before-2025.png",
+        type: "image",
+        caption: "Before / Aug 2025",
+      },
+      { src: "/images/deepubuntu/deepav.mp4", type: "video", caption: "Data showcase" },
+      { src: "/images/deepubuntu/arch.png", type: "image", caption: "Pipeline" },
     ],
-    link: "https://deepubuntu.com",
+    status:
+      "Shipped Dec 2025. DeepUbuntu Labs later repositioned from AV datasets to physical AI and replaced the site. Everything here is captured from the build that shipped.",
   },
 ];
 
 function MediaSlot({ item, alt }: { item: GalleryItem; alt: string }) {
-  const content =
+  const media =
     item.type === "video" ? (
       <video
         src={item.src}
@@ -86,6 +98,21 @@ function MediaSlot({ item, alt }: { item: GalleryItem; alt: string }) {
         draggable={false}
       />
     );
+
+  const content = item.caption ? (
+    <div className="relative w-full h-full">
+      {media}
+      <span
+        className="absolute bottom-1.5 left-1.5 z-20 px-1.5 py-0.5 font-mono text-[10px] leading-none
+          tracking-[0.15em] uppercase text-white bg-black/70 backdrop-blur-[2px]
+          dark:text-black dark:bg-white/80"
+      >
+        {item.caption}
+      </span>
+    </div>
+  ) : (
+    media
+  );
 
   if (item.link) {
     return (
@@ -362,25 +389,37 @@ function ProjectCard({
         <p className="text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-400 max-w-md font-mono">
           {project.description}
         </p>
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 text-sm font-mono text-black dark:text-white
-            border-b border-current pb-0.5 hover:pb-1 transition-all duration-200
-            tracking-wider uppercase"
-        >
-          View Project
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            className="transition-transform duration-300 ease-out group-hover:-rotate-45"
+        {project.link ? (
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 text-sm font-mono text-black dark:text-white
+              border-b border-current pb-0.5 hover:pb-1 transition-all duration-200
+              tracking-wider uppercase"
           >
-            <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="1.5" />
-          </svg>
-        </a>
+            View Project
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              className="transition-transform duration-300 ease-out group-hover:-rotate-45"
+            >
+              <path d="M1 6H11M11 6L6 1M11 6L6 11" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+          </a>
+        ) : null}
+
+        {project.status ? (
+          <p
+            className="flex gap-2.5 max-w-md font-mono text-xs leading-relaxed
+              text-gray-500 dark:text-gray-500"
+          >
+            <span aria-hidden className="mt-[0.45em] h-px w-4 shrink-0 bg-gray-400 dark:bg-gray-600" />
+            <span>{project.status}</span>
+          </p>
+        ) : null}
       </div>
     </div>
   );

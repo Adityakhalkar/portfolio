@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/templates", label: "Templates" },
   { href: "/showcase", label: "Showcase" },
   { href: "/gsap", label: "GSAP" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export default function Navigation() {

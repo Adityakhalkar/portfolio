@@ -7,9 +7,127 @@ import CustomCursor from "@/components/CustomCursor";
 import GrainOverlay from "@/components/GrainOverlay";
 import LightbulbAnimation from "@/components/toggle";
 
+const SITE = "https://www.adityakhalkar.me";
+const TITLE = "Aditya Khalkar | Freelance Design Engineer & Web Developer";
+const DESCRIPTION =
+  "Freelance design engineer. I design and build fast, animated websites and product UI in React, Next.js and GSAP. Available for contract work, based in India.";
+
 export const metadata: Metadata = {
-  title: "Aditya Khalkar | Creative Technologist",
-  description: "Portfolio of Aditya Khalkar - Full Stack Developer, Data Scientist, and Creative Technologist.",
+  metadataBase: new URL(SITE),
+  title: { default: TITLE, template: "%s | Aditya Khalkar" },
+  description: DESCRIPTION,
+  applicationName: "Aditya Khalkar",
+  authors: [{ name: "Aditya Khalkar", url: SITE }],
+  creator: "Aditya Khalkar",
+  publisher: "Aditya Khalkar",
+  keywords: [
+    "freelance design engineer",
+    "freelance web designer",
+    "hire Next.js developer",
+    "React developer for hire",
+    "GSAP animation developer",
+    "landing page designer and developer",
+    "product UI designer",
+    "web design freelancer India",
+    "design engineer India",
+    "Aditya Khalkar",
+  ],
+  alternates: { canonical: SITE },
+  openGraph: {
+    type: "website",
+    url: SITE,
+    siteName: "Aditya Khalkar",
+    title: TITLE,
+    description: DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@adityakhalkar_",
+    creator: "@adityakhalkar_",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  category: "technology",
+};
+
+/* Structured data. Search engines use it for rich results; answer engines
+   lean on it much harder, since it is the only part of the page that states
+   plainly what I do, where, and how to reach me. */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${SITE}/#person`,
+      name: "Aditya Khalkar",
+      url: SITE,
+      email: "mailto:khalkaraditya8@gmail.com",
+      jobTitle: "Freelance Design Engineer",
+      description: DESCRIPTION,
+      address: { "@type": "PostalAddress", addressCountry: "IN" },
+      knowsAbout: [
+        "Web design",
+        "Design engineering",
+        "React",
+        "Next.js",
+        "TypeScript",
+        "GSAP",
+        "Web animation",
+        "User interface design",
+        "Landing page design",
+        "Machine learning education",
+      ],
+      sameAs: [
+        "https://x.com/adityakhalkar_",
+        "https://github.com/adityakhalkar",
+        "https://www.linkedin.com/in/aditya-khalkar-dsai",
+      ],
+      worksFor: {
+        "@type": "Organization",
+        name: "Deep-ML",
+        url: "https://deep-ml.com",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${SITE}/#service`,
+      name: "Aditya Khalkar - Freelance Design Engineering",
+      url: SITE,
+      description:
+        "Freelance web design and front-end development. Landing pages, product interfaces, design systems and motion work, designed and built by one person.",
+      provider: { "@id": `${SITE}/#person` },
+      areaServed: { "@type": "Place", name: "Worldwide" },
+      availableLanguage: ["English", "Hindi", "Marathi"],
+      serviceType: [
+        "Web design",
+        "Front-end development",
+        "Landing page design and development",
+        "Product UI design",
+        "Web animation and motion design",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE}/#website`,
+      url: SITE,
+      name: "Aditya Khalkar",
+      description: DESCRIPTION,
+      publisher: { "@id": `${SITE}/#person` },
+      inLanguage: "en",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -20,6 +138,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Syne:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
