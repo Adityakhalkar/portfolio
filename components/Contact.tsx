@@ -56,7 +56,19 @@ export default function Contact() {
     tl.to(heading, { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "power3.inOut" });
     tl.to(body, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 0.25);
 
+    /* This is the section that earns the money, so it must never stay hidden
+       because a scroll trigger failed to fire. If the reveal has not run a few
+       seconds in, drop the animation and show the content. */
+    const failsafe = setTimeout(() => {
+      if (tl.progress() === 0) {
+        tl.kill();
+        gsap.set(heading, { clipPath: "inset(0% 0% 0% 0%)" });
+        gsap.set(body, { opacity: 1, y: 0 });
+      }
+    }, 4000);
+
     return () => {
+      clearTimeout(failsafe);
       tl.scrollTrigger?.kill();
       tl.kill();
       [heading, body].forEach((el) => el && gsap.set(el, { clearProps: "all" }));
