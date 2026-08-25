@@ -11,6 +11,7 @@ interface GalleryItem {
   type: "image" | "video";
   link?: string;
   caption?: string;
+  poster?: string;
 }
 
 interface Project {
@@ -50,7 +51,7 @@ const PROJECTS: Project[] = [
     gallery: [
       { src: "/images/greedjs/github.png", type: "image" },
       { src: "/images/greedjs/npm.png", type: "image" },
-      { src: "/images/greedjs/greedjs.mp4", type: "video" },
+      { src: "/images/greedjs/greedjs.mp4", type: "video", poster: "/images/greedjs/greedjs-poster.jpg" },
     ],
     link: "https://github.com/adityakhalkar/greed.js",
   },
@@ -63,6 +64,7 @@ const PROJECTS: Project[] = [
     hero: {
       src: "/images/deepubuntu/deepubuntu-landing.mp4",
       type: "video",
+      poster: "/images/deepubuntu/deepubuntu-landing-poster.jpg",
       caption: "After / Dec 2025",
     },
     gallery: [
@@ -71,7 +73,7 @@ const PROJECTS: Project[] = [
         type: "image",
         caption: "Before / Aug 2025",
       },
-      { src: "/images/deepubuntu/deepav.mp4", type: "video", caption: "Data showcase" },
+      { src: "/images/deepubuntu/deepav.mp4", type: "video", poster: "/images/deepubuntu/deepav-poster.jpg", caption: "Data showcase" },
       { src: "/images/deepubuntu/arch.png", type: "image", caption: "Pipeline" },
     ],
     status:
@@ -80,15 +82,44 @@ const PROJECTS: Project[] = [
 ];
 
 function MediaSlot({ item, alt }: { item: GalleryItem; alt: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  /* Three looping videos decoding at once was the single biggest source of
+     dropped frames. Nothing buffers until it is near the viewport, and nothing
+     keeps decoding once it leaves. */
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (v.preload !== "auto") v.preload = "auto";
+          v.play().catch(() => {
+            /* autoplay refused: the poster stays, which is a fine fallback */
+          });
+        } else {
+          v.pause();
+        }
+      },
+      { rootMargin: "150px" }
+    );
+
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+
   const media =
     item.type === "video" ? (
       <video
+        ref={videoRef}
         src={item.src}
+        poster={item.poster}
         className="w-full h-full object-contain"
-        autoPlay
         loop
         muted
         playsInline
+        preload="none"
       />
     ) : (
       <img
@@ -96,6 +127,8 @@ function MediaSlot({ item, alt }: { item: GalleryItem; alt: string }) {
         alt={alt}
         className="w-full h-full object-contain"
         draggable={false}
+        loading="lazy"
+        decoding="async"
       />
     );
 
