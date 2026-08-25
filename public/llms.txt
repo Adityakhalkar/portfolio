@@ -31,6 +31,15 @@ between them.
   running Deep-ML
 - Work I cannot do well. If a brief is a poor fit I say so rather than take it
 
+## What it costs
+
+Fixed prices, published so nobody has to ask.
+
+- Landing page, designed and built: $2,500
+- Website and design system, four pages: $5,000
+- UI audit and fixes on an existing product: $1,800
+- Agent workflow setup for an engineering team: $3,000
+
 ## How I work
 
 Fixed scope and fixed price, agreed before I start, so the cost of a project is

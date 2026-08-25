@@ -26,6 +26,15 @@ export const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(
   SUBJECT
 )}&body=${encodeURIComponent(BODY)}`;
 
+/* Published up front on purpose. Someone who likes the work but has no idea
+   whether it costs $500 or $15,000 does not send the email. */
+const PACKAGES = [
+  { name: "Landing page", price: "$2,500", note: "Designed and built" },
+  { name: "Site + design system", price: "$5,000", note: "Four pages, extendable" },
+  { name: "UI audit and fixes", price: "$1,800", note: "On your existing product" },
+  { name: "Agent workflow setup", price: "$3,000", note: "Claude Code for your team" },
+];
+
 const ELSEWHERE = [
   { label: "X", href: "https://x.com/adityakhalkar_", handle: "@adityakhalkar_" },
   { label: "GitHub", href: "https://github.com/adityakhalkar", handle: "adityakhalkar" },
@@ -124,6 +133,26 @@ export default function Contact() {
               get a straight answer on whether I am the right person, including
               when I am not.
             </p>
+
+            <ul className="pt-2 space-y-px">
+              {PACKAGES.map((pkg) => (
+                <li
+                  key={pkg.name}
+                  className="flex items-baseline justify-between gap-4 border-t border-gray-200
+                    dark:border-gray-800 py-2.5 font-mono text-sm"
+                >
+                  <span className="text-black dark:text-white">
+                    {pkg.name}
+                    <span className="block text-[11px] text-gray-500 dark:text-gray-500">
+                      {pkg.note}
+                    </span>
+                  </span>
+                  <span className="shrink-0 tabular-nums text-black dark:text-white">
+                    {pkg.price}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div className="space-y-8">

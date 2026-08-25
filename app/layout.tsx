@@ -109,6 +109,22 @@ const JSON_LD = {
         "Freelance web design and front-end development. Landing pages, product interfaces, design systems and motion work, designed and built by one person.",
       provider: { "@id": `${SITE}/#person` },
       areaServed: { "@type": "Place", name: "Worldwide" },
+      priceRange: "$1800-$5000",
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Freelance packages",
+        itemListElement: [
+          ["Landing page, designed and built", "2500"],
+          ["Website and design system, four pages", "5000"],
+          ["UI audit and fixes on an existing product", "1800"],
+          ["Agent workflow setup for an engineering team", "3000"],
+        ].map(([name, price]) => ({
+          "@type": "Offer",
+          priceCurrency: "USD",
+          price,
+          itemOffered: { "@type": "Service", name },
+        })),
+      },
       availableLanguage: ["English", "Hindi", "Marathi"],
       serviceType: [
         "Web design",
