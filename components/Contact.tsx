@@ -10,21 +10,26 @@ export const EMAIL = "khalkaraditya8@gmail.com";
 
 /* The brief does the talking. Prefilling the questions means an enquiry
    arrives qualified instead of arriving as "hi, are you available?" */
-const SUBJECT = "Project enquiry";
-const BODY = [
-  "Hi Aditya,",
-  "",
+const mailto = (subject: string, lines: string[]) =>
+  `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+    ["Hi Aditya,", "", ...lines, "", ""].join("\n")
+  )}`;
+
+export const MAILTO = mailto("Project enquiry", [
   "What we're building:",
   "Where we're stuck:",
   "Timeline:",
   "Budget range:",
-  "",
-  "",
-].join("\n");
+]);
 
-export const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(
-  SUBJECT
-)}&body=${encodeURIComponent(BODY)}`;
+/* Scope is negotiable, the rate is not. Someone with less money still gets a
+   way in, and the whole negotiation happens in writing, which is the point. */
+export const BUDGET_MAILTO = mailto("Working to a budget", [
+  "What we're building:",
+  "The one thing we need most:",
+  "Budget we have:",
+  "Timeline:",
+]);
 
 /* Published up front on purpose. Someone who likes the work but has no idea
    whether it costs $500 or $15,000 does not send the email. */
@@ -33,7 +38,15 @@ const PACKAGES = [
   { name: "Site + design system", price: "$5,000", note: "Four pages, extendable" },
   { name: "UI audit and fixes", price: "$1,800", note: "On your existing product" },
   { name: "Agent workflow setup", price: "$3,000", note: "Claude Code for your team" },
-];
+].map((pkg) => ({
+  ...pkg,
+  href: mailto(`${pkg.name} enquiry`, [
+    `Package: ${pkg.name} (${pkg.price})`,
+    "",
+    "What we're building:",
+    "Timeline:",
+  ]),
+}));
 
 const ELSEWHERE = [
   { label: "X", href: "https://x.com/adityakhalkar_", handle: "@adityakhalkar_" },
@@ -136,23 +149,42 @@ export default function Contact() {
 
             <ul className="pt-2 space-y-px">
               {PACKAGES.map((pkg) => (
-                <li
-                  key={pkg.name}
-                  className="flex items-baseline justify-between gap-4 border-t border-gray-200
-                    dark:border-gray-800 py-2.5 font-mono text-sm"
-                >
-                  <span className="text-black dark:text-white">
-                    {pkg.name}
-                    <span className="block text-[11px] text-gray-500 dark:text-gray-500">
-                      {pkg.note}
+                <li key={pkg.name}>
+                  <a
+                    href={pkg.href}
+                    className="group flex items-baseline justify-between gap-4 border-t border-gray-200
+                      dark:border-gray-800 py-2.5 font-mono text-sm transition-colors duration-200
+                      hover:border-black dark:hover:border-white"
+                  >
+                    <span className="text-black dark:text-white">
+                      <span className="border-b border-transparent group-hover:border-current transition-colors duration-200">
+                        {pkg.name}
+                      </span>
+                      <span className="block text-[11px] text-gray-500 dark:text-gray-500">
+                        {pkg.note}
+                      </span>
                     </span>
-                  </span>
-                  <span className="shrink-0 tabular-nums text-black dark:text-white">
-                    {pkg.price}
-                  </span>
+                    <span className="shrink-0 tabular-nums text-black dark:text-white">
+                      {pkg.price}
+                    </span>
+                  </a>
                 </li>
               ))}
             </ul>
+
+            <p className="border-t border-gray-200 dark:border-gray-800 pt-4 font-mono text-sm
+              leading-relaxed text-gray-600 dark:text-gray-400">
+              Smaller budget?{" "}
+              <a
+                href={BUDGET_MAILTO}
+                className="text-black dark:text-white border-b border-current pb-0.5
+                  hover:pb-1 transition-all duration-200"
+              >
+                Tell me the number
+              </a>{" "}
+              and what matters most, and I will tell you what fits inside it. I
+              move the scope, not the quality.
+            </p>
           </div>
 
           <div className="space-y-8">

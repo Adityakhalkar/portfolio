@@ -40,6 +40,10 @@ Fixed prices, published so nobody has to ask.
 - UI audit and fixes on an existing product: $1,800
 - Agent workflow setup for an engineering team: $3,000
 
+These are starting prices for a defined scope. If a budget is smaller than the
+number above, I will say what fits inside that budget rather than turn the work
+away or quietly do less than I promised. The scope moves, the quality does not.
+
 ## How I work
 
 Fixed scope and fixed price, agreed before I start, so the cost of a project is
