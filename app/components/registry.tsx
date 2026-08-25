@@ -10,7 +10,6 @@ import { ScrambleTextDemo, scrambleTextCode } from "./ui/scramble-text";
 import { ElasticSliderDemo, elasticSliderCode } from "./ui/elastic-slider";
 import { DockDemo, dockCode } from "./ui/dock";
 import { ImageTunnelDemo, imageTunnelCode } from "./ui/image-tunnel";
-import { PageTransitionDemo, pageTransitionCode } from "./ui/page-transition";
 
 export type ComponentCategory =
   | "Buttons & Interactions"
@@ -144,14 +143,5 @@ export const registry: ComponentEntry[] = [
     category: "Cards",
     component: ImageTunnelDemo,
     code: imageTunnelCode,
-  },
-  {
-    id: "page-transition",
-    name: "Page Transition",
-    description:
-      "Two SVG bezier shapes draw in via stroke-dashoffset, swallow the viewport, then sweep off revealing the new page. GSAP powered, no extra deps.",
-    category: "Navigation",
-    component: PageTransitionDemo,
-    code: pageTransitionCode,
   },
 ];
