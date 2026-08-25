@@ -2,19 +2,11 @@ import type { MetadataRoute } from "next";
 
 const SITE = "https://www.adityakhalkar.me";
 
-/* Template sub-pages (features, pricing) are intentionally left out: they are
-   thin variations of their parent and dilute what the site is understood to
-   be about. */
+/* /magnetic-deck is an unlinked experiment, so it stays out. Only pages a
+   visitor is meant to land on belong here. */
 const ROUTES: Array<{ path: string; priority: number; freq: MetadataRoute.Sitemap[number]["changeFrequency"] }> = [
   { path: "/", priority: 1.0, freq: "monthly" },
-  { path: "/showcase", priority: 0.8, freq: "monthly" },
-  { path: "/templates", priority: 0.8, freq: "monthly" },
-  { path: "/gsap", priority: 0.6, freq: "yearly" },
-  { path: "/templates/agent-marketplace", priority: 0.5, freq: "yearly" },
-  { path: "/templates/ai-governance", priority: 0.5, freq: "yearly" },
-  { path: "/templates/motion-design", priority: 0.5, freq: "yearly" },
-  { path: "/templates/supply-chain", priority: 0.5, freq: "yearly" },
-  { path: "/templates/threat-intel", priority: 0.5, freq: "yearly" },
+  { path: "/components", priority: 0.7, freq: "monthly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
