@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
+import { setLenis } from "@/lib/lenis";
 
 export default function SmoothScroll() {
     const pathname = usePathname();
@@ -23,8 +24,10 @@ export default function SmoothScroll() {
         }
 
         requestAnimationFrame(raf);
+        setLenis(lenis);
 
         return () => {
+            setLenis(null);
             lenis.destroy();
         };
     }, [isTemplate]);

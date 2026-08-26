@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { EMAIL, MAILTO } from "@/lib/contact";
+import { lockScroll, unlockScroll } from "@/lib/lenis";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -74,9 +75,12 @@ export default function EnquiryModal({
 
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    /* overflow alone does not hold Lenis, which scrolls the window itself. */
+    lockScroll();
     document.addEventListener("keydown", onKeyDown, true);
     return () => {
       document.body.style.overflow = prevOverflow;
+      unlockScroll();
       document.removeEventListener("keydown", onKeyDown, true);
     };
   }, [open, onClose]);
