@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
 export const alt =
-  "Aditya Khalkar - Freelance Design Engineer & Web Developer, available for contract work";
+  "Aditya Khalkar - Freelance Full-Stack Developer & Design Engineer, available for contract work";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -52,13 +52,13 @@ export default async function Image() {
             Aditya Khalkar
           </div>
           <div style={{ fontSize: 40, color: "#e4e4e7", lineHeight: 1.25, maxWidth: 900 }}>
-            Freelance design engineer. I design and build.
+            Full-stack developer and design engineer.
           </div>
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
           <div style={{ fontSize: 24, color: "#71717a", letterSpacing: 2 }}>
-            React · Next.js · GSAP · Product UI
+            React · Next.js · Node · Python
           </div>
           <div style={{ fontSize: 24, color: "#71717a", letterSpacing: 2 }}>adityakhalkar.me</div>
         </div>

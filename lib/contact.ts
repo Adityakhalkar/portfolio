@@ -16,6 +16,7 @@ export const MAILTO = mailto("Project enquiry", [
 
 export const PACKAGES = [
   { name: "Landing page", price: "$2,500", note: "Designed and built" },
+  { name: "Full-stack build", price: "from $8,000", note: "Front end, API and database" },
   { name: "Site + design system", price: "$5,000", note: "Four pages, extendable" },
   { name: "UI audit and fixes", price: "$1,800", note: "On your existing product" },
   { name: "Agent workflow setup", price: "$3,000", note: "Claude Code for your team" },

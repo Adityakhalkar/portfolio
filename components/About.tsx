@@ -153,10 +153,10 @@ export default function About() {
             ref={line1Ref}
             className="text-lg md:text-2xl leading-relaxed font-light opacity-0"
           >
-            I am a freelance design engineer. I design websites and product
-            interfaces and then build them in React, Next.js and GSAP, which
-            means one person carries the work from the first sketch to the
-            thing that ships.
+            I started on the backend and moved forward from there, so I now
+            design the interface, build the front end, and ship the API and
+            database behind it. One person carries the work from the first
+            sketch to the thing running in production.
           </p>
 
           <p

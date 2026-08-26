@@ -8,9 +8,9 @@ import GrainOverlay from "@/components/GrainOverlay";
 import LightbulbAnimation from "@/components/toggle";
 
 const SITE = "https://www.adityakhalkar.me";
-const TITLE = "Aditya Khalkar | Freelance Design Engineer & Web Developer";
+const TITLE = "Aditya Khalkar | Freelance Full-Stack Developer & Design Engineer";
 const DESCRIPTION =
-  "Freelance design engineer. I design and build fast, animated websites and product UI in React, Next.js and GSAP. Available for contract work, based in India.";
+  "Freelance full-stack developer and design engineer. I design the interface, build the front end, and ship the backend behind it. React, Next.js, Node and Python. Available for contract work, based in India.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -21,14 +21,19 @@ export const metadata: Metadata = {
   creator: "Aditya Khalkar",
   publisher: "Aditya Khalkar",
   keywords: [
+    "freelance full stack developer",
+    "hire full stack developer",
     "freelance design engineer",
     "freelance web designer",
+    "Node.js developer for hire",
+    "API and backend developer freelance",
     "hire Next.js developer",
     "React developer for hire",
     "GSAP animation developer",
     "landing page designer and developer",
     "product UI designer",
     "web design freelancer India",
+    "full stack developer India",
     "design engineer India",
     "Aditya Khalkar",
   ],
@@ -74,14 +79,20 @@ const JSON_LD = {
       name: "Aditya Khalkar",
       url: SITE,
       email: "mailto:khalkaraditya8@gmail.com",
-      jobTitle: "Freelance Design Engineer",
+      jobTitle: "Freelance Full-Stack Developer and Design Engineer",
       description: DESCRIPTION,
       address: { "@type": "PostalAddress", addressCountry: "IN" },
       knowsAbout: [
         "Web design",
         "Design engineering",
+        "Full-stack development",
+        "Backend development",
+        "API design",
         "React",
         "Next.js",
+        "Node.js",
+        "Python",
+        "PostgreSQL",
         "TypeScript",
         "GSAP",
         "Web animation",
@@ -103,18 +114,19 @@ const JSON_LD = {
     {
       "@type": "ProfessionalService",
       "@id": `${SITE}/#service`,
-      name: "Aditya Khalkar - Freelance Design Engineering",
+      name: "Aditya Khalkar - Freelance Full-Stack Development and Design Engineering",
       url: SITE,
       description:
-        "Freelance web design and front-end development. Landing pages, product interfaces, design systems and motion work, designed and built by one person.",
+        "Freelance full-stack development and web design. Landing pages, product interfaces, APIs and the backend behind them, designed and built end to end by one person.",
       provider: { "@id": `${SITE}/#person` },
       areaServed: { "@type": "Place", name: "Worldwide" },
-      priceRange: "$1800-$5000",
+      priceRange: "$1800-$8000",
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Freelance packages",
         itemListElement: [
           ["Landing page, designed and built", "2500"],
+          ["Full-stack application, designed and built end to end", "8000"],
           ["Website and design system, four pages", "5000"],
           ["UI audit and fixes on an existing product", "1800"],
           ["Agent workflow setup for an engineering team", "3000"],
@@ -129,6 +141,8 @@ const JSON_LD = {
       serviceType: [
         "Web design",
         "Front-end development",
+        "Full-stack web application development",
+        "Backend and API development",
         "Landing page design and development",
         "Product UI design",
         "Web animation and motion design",
