@@ -1,68 +1,21 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const EMAIL = "khalkaraditya8@gmail.com";
-
-/* The brief does the talking. Prefilling the questions means an enquiry
-   arrives qualified instead of arriving as "hi, are you available?" */
-const mailto = (subject: string, lines: string[]) =>
-  `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-    ["Hi Aditya,", "", ...lines, "", ""].join("\n")
-  )}`;
-
-export const MAILTO = mailto("Project enquiry", [
-  "What we're building:",
-  "Where we're stuck:",
-  "Timeline:",
-  "Budget range:",
-]);
-
-/* Scope is negotiable, the rate is not. Someone with less money still gets a
-   way in, and the whole negotiation happens in writing, which is the point. */
-export const BUDGET_MAILTO = mailto("Working to a budget", [
-  "What we're building:",
-  "The one thing we need most:",
-  "Budget we have:",
-  "Timeline:",
-]);
-
-/* Published up front on purpose. Someone who likes the work but has no idea
-   whether it costs $500 or $15,000 does not send the email. */
-const PACKAGES = [
-  { name: "Landing page", price: "$2,500", note: "Designed and built" },
-  { name: "Site + design system", price: "$5,000", note: "Four pages, extendable" },
-  { name: "UI audit and fixes", price: "$1,800", note: "On your existing product" },
-  { name: "Agent workflow setup", price: "$3,000", note: "Claude Code for your team" },
-].map((pkg) => ({
-  ...pkg,
-  href: mailto(`${pkg.name} enquiry`, [
-    `Package: ${pkg.name} (${pkg.price})`,
-    "",
-    "What we're building:",
-    "Timeline:",
-  ]),
-}));
-
-const ELSEWHERE = [
-  { label: "X", href: "https://x.com/adityakhalkar_", handle: "@adityakhalkar_" },
-  { label: "GitHub", href: "https://github.com/adityakhalkar", handle: "adityakhalkar" },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/aditya-khalkar-dsai",
-    handle: "aditya-khalkar-dsai",
-  },
-];
+import EnquiryModal from "./EnquiryModal";
+import { EMAIL, MAILTO, PACKAGES, ELSEWHERE } from "@/lib/contact";
 
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
+  const [modal, setModal] = useState<{ pkg?: string; mode: "package" | "budget" } | null>(null);
+  const closeModal = useCallback(() => setModal(null), []);
 
   useEffect(() => {
     const heading = headingRef.current;
@@ -150,9 +103,10 @@ export default function Contact() {
             <ul className="pt-2 space-y-px">
               {PACKAGES.map((pkg) => (
                 <li key={pkg.name}>
-                  <a
-                    href={pkg.href}
-                    className="group flex items-baseline justify-between gap-4 border-t border-gray-200
+                  <button
+                    type="button"
+                    onClick={() => setModal({ pkg: `${pkg.name} (${pkg.price})`, mode: "package" })}
+                    className="group w-full text-left flex items-baseline justify-between gap-4 border-t border-gray-200
                       dark:border-gray-800 py-2.5 font-mono text-sm transition-colors duration-200
                       hover:border-black dark:hover:border-white"
                   >
@@ -167,7 +121,7 @@ export default function Contact() {
                     <span className="shrink-0 tabular-nums text-black dark:text-white">
                       {pkg.price}
                     </span>
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -175,13 +129,14 @@ export default function Contact() {
             <p className="border-t border-gray-200 dark:border-gray-800 pt-4 font-mono text-sm
               leading-relaxed text-gray-600 dark:text-gray-400">
               Smaller budget?{" "}
-              <a
-                href={BUDGET_MAILTO}
+              <button
+                type="button"
+                onClick={() => setModal({ mode: "budget" })}
                 className="text-black dark:text-white border-b border-current pb-0.5
                   hover:pb-1 transition-all duration-200"
               >
                 Tell me the number
-              </a>{" "}
+              </button>{" "}
               and what matters most, and I will tell you what fits inside it. I
               move the scope, not the quality.
             </p>
@@ -239,6 +194,13 @@ export default function Contact() {
           </div>
         </div>
       </div>
+
+      <EnquiryModal
+        open={modal !== null}
+        onClose={closeModal}
+        presetPackage={modal?.pkg}
+        mode={modal?.mode ?? "package"}
+      />
     </section>
   );
 }

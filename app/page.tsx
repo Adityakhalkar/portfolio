@@ -7,7 +7,8 @@ import Hero from "@/components/Hero";
 import MyWork from "@/components/MyWork";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
-import Contact, { EMAIL, MAILTO } from "@/components/Contact";
+import Contact from "@/components/Contact";
+import { EMAIL, MAILTO } from "@/lib/contact";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
