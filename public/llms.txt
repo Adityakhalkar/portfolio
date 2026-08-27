@@ -43,7 +43,6 @@ where the money is lost.
 
 Fixed prices, published so nobody has to ask.
 
-- Positioning teardown, what your site says versus what you actually sell: free
 - Landing page, positioned, designed and built: $2,500
 - Full-stack application, designed and built end to end: from $8,000
 - Website and design system, four pages: $5,000

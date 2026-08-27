@@ -123,12 +123,11 @@ const JSON_LD = {
         "I help technical products explain themselves and sell. Positioning and messaging, then the design, front end, API and database to deliver it, built end to end by one person.",
       provider: { "@id": `${SITE}/#person` },
       areaServed: { "@type": "Place", name: "Worldwide" },
-      priceRange: "$0-$8000",
+      priceRange: "$1800-$8000",
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Freelance packages",
         itemListElement: [
-          ["Positioning teardown: what your site says versus what you sell", "0"],
           ["Landing page, positioned, designed and built", "2500"],
           ["Full-stack application, designed and built end to end", "8000"],
           ["Website and design system, four pages", "5000"],
