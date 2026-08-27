@@ -88,9 +88,10 @@ export default function Contact() {
             </p>
 
             <p className="text-lg md:text-2xl leading-relaxed font-light text-black dark:text-concrete">
-              I design it, build it, and ship the backend behind it, so you
-              hire one person instead of three. Landing pages, full products,
-              and the motion work that makes both feel expensive.
+              A good product that reads like every other product loses the
+              deal before anyone sees the demo. I work out what yours should
+              say, then design and build the thing that says it, front end
+              through backend. One person instead of three.
             </p>
 
             <p className="font-mono text-sm leading-relaxed text-gray-600 dark:text-gray-400">

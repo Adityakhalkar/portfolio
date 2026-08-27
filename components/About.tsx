@@ -153,10 +153,11 @@ export default function About() {
             ref={line1Ref}
             className="text-lg md:text-2xl leading-relaxed font-light opacity-0"
           >
-            I started on the backend and moved forward from there, so I now
-            design the interface, build the front end, and ship the API and
-            database behind it. One person carries the work from the first
-            sketch to the thing running in production.
+            Most technical products lose people in the first five seconds,
+            because nobody can tell what they actually do. I started on the
+            backend and worked forward from there, so I can take a product
+            from what it should say, through how it looks, down to the API
+            running underneath it.
           </p>
 
           <p

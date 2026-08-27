@@ -52,7 +52,7 @@ export default async function Image() {
             Aditya Khalkar
           </div>
           <div style={{ fontSize: 40, color: "#e4e4e7", lineHeight: 1.25, maxWidth: 900 }}>
-            Full-stack developer and design engineer.
+            I help technical products explain themselves and sell.
           </div>
         </div>
 

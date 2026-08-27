@@ -10,7 +10,7 @@ import LightbulbAnimation from "@/components/toggle";
 const SITE = "https://www.adityakhalkar.me";
 const TITLE = "Aditya Khalkar | Freelance Full-Stack Developer & Design Engineer";
 const DESCRIPTION =
-  "Freelance full-stack developer and design engineer. I design the interface, build the front end, and ship the backend behind it. React, Next.js, Node and Python. Available for contract work, based in India.";
+  "Freelance full-stack developer. I help technical products explain themselves and sell: positioning, design, front end and the backend behind it, by one person. Available for contract work.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   publisher: "Aditya Khalkar",
   keywords: [
     "freelance full stack developer",
+    "landing page that converts",
+    "website positioning for startups",
+    "technical product marketing site",
     "hire full stack developer",
     "freelance design engineer",
     "freelance web designer",
@@ -117,15 +120,16 @@ const JSON_LD = {
       name: "Aditya Khalkar - Freelance Full-Stack Development and Design Engineering",
       url: SITE,
       description:
-        "Freelance full-stack development and web design. Landing pages, product interfaces, APIs and the backend behind them, designed and built end to end by one person.",
+        "I help technical products explain themselves and sell. Positioning and messaging, then the design, front end, API and database to deliver it, built end to end by one person.",
       provider: { "@id": `${SITE}/#person` },
       areaServed: { "@type": "Place", name: "Worldwide" },
-      priceRange: "$1800-$8000",
+      priceRange: "$0-$8000",
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Freelance packages",
         itemListElement: [
-          ["Landing page, designed and built", "2500"],
+          ["Positioning teardown: what your site says versus what you sell", "0"],
+          ["Landing page, positioned, designed and built", "2500"],
           ["Full-stack application, designed and built end to end", "8000"],
           ["Website and design system, four pages", "5000"],
           ["UI audit and fixes on an existing product", "1800"],
@@ -139,6 +143,8 @@ const JSON_LD = {
       },
       availableLanguage: ["English", "Hindi", "Marathi"],
       serviceType: [
+        "Website positioning and messaging",
+        "Conversion-focused web design",
         "Web design",
         "Front-end development",
         "Full-stack web application development",
