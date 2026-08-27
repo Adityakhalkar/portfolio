@@ -153,11 +153,9 @@ export default function About() {
             ref={line1Ref}
             className="text-lg md:text-2xl leading-relaxed font-light opacity-0"
           >
-            Most technical products lose people in the first five seconds,
-            because nobody can tell what they actually do. I started on the
-            backend and worked forward from there, so I can take a product
-            from what it should say, through how it looks, down to the API
-            running underneath it.
+            I started on the backend and kept drifting forward until I was
+            designing the thing too. Now I build whole products, front to
+            back. Sometimes useful, sometimes just to see what breaks.
           </p>
 
           <p
