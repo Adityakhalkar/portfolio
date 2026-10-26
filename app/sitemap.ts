@@ -6,7 +6,6 @@ const SITE = "https://www.adityakhalkar.me";
    visitor is meant to land on belong here. */
 const ROUTES: Array<{ path: string; priority: number; freq: MetadataRoute.Sitemap[number]["changeFrequency"] }> = [
   { path: "/", priority: 1.0, freq: "monthly" },
-  { path: "/components", priority: 0.7, freq: "monthly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

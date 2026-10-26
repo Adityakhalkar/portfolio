@@ -8,7 +8,6 @@ import { ScrambleText } from "@/app/components/ui/scramble-text";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
-  { href: "/components", label: "Components" },
   { href: "/lab", label: "Lab" },
   { href: "/#contact", label: "Hire Me" },
 ];
