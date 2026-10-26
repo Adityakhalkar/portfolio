@@ -9,6 +9,7 @@ import { ScrambleText } from "@/app/components/ui/scramble-text";
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
   { href: "/components", label: "Components" },
+  { href: "/lab", label: "Lab" },
   { href: "/#contact", label: "Hire Me" },
 ];
 
@@ -123,8 +124,11 @@ export default function Navigation() {
           const isActive = i === activeIndex;
           const hidden = collapsed && !isActive;
 
+          // /lab is a separate Vercel app behind a rewrite, so it needs a full page load
+          const Anchor = item.href === "/lab" ? "a" : Link;
+
           return (
-            <Link
+            <Anchor
               key={item.href}
               href={item.href}
               ref={isActive ? activeItemRef : undefined}
@@ -147,7 +151,7 @@ export default function Navigation() {
                 duration={400}
                 charset="!@#$%^&*[]{}—=+?"
               />
-            </Link>
+            </Anchor>
           );
         })}
       </div>
