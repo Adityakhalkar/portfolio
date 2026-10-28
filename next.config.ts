@@ -1,9 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   // The lab (~/lab) is its own Vercel project with basePath "/lab"
   async rewrites() {
     return [
